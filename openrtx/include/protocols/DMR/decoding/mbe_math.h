@@ -23,8 +23,8 @@
  * @param s Output pointer receiving `sinf(x)`.
  * @param c Output pointer receiving `cosf(x)`.
  */
-static inline void
-mbe_sincosf(float x, float* s, float* c) {
+static inline void mbe_sincosf(float x, float *s, float *c)
+{
 #if defined(__has_builtin)
 #if __has_builtin(__builtin_sincosf)
     __builtin_sincosf(x, s, c);

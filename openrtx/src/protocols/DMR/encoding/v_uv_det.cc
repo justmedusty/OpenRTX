@@ -20,21 +20,21 @@
  */
 
 
-#include "typedef.h"
-#include "globals.h"
-#include "imbe.h"
-#include "basic_op.h"
-#include "aux_sub.h"
-#include "math_sub.h"
-#include "dsp_sub.h"
-#include "tbls.h"
-#include "v_uv_det.h"
+#include "protocols/DMR/encoding/typedef.h"
+#include "protocols/DMR/encoding/globals.h"
+#include "protocols/DMR/encoding/imbe.h"
+#include "protocols/DMR/encoding/basic_op.h"
+#include "protocols/DMR/encoding/aux_sub.h"
+#include "protocols/DMR/encoding/math_sub.h"
+#include "protocols/DMR/encoding/dsp_sub.h"
+#include "protocols/DMR/encoding/tbls.h"
+#include "protocols/DMR/encoding/v_uv_det.h"
 
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
-#include "encode.h"
-#include "imbe_vocoder_impl.h"
+#include "protocols/DMR/encoding/encode.h"
+#include "protocols/DMR/encoding/imbe_vocoder_impl.h"
 
 
 #define CNST_0_5625_Q1_15   0x4800

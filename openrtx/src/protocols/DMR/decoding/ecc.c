@@ -15,8 +15,8 @@
  */
 
 #include <stdint.h>
-#include "ecc_const.h"
-#include "mbelib.h"
+#include "protocols/DMR/decoding/ecc_const.h"
+#include "protocols/DMR/decoding/mbelib.h"
 
 /*
  * Precomputed correction masks for Hamming (15,11) variants.
@@ -37,9 +37,8 @@ static const int ham1511_7100_lut[16] = {
  * @brief Correct a (23,12) Golay encoded block in-place and extract data.
  * @param block Pointer to packed 23-bit codeword (LSBs contain codeword). On return, holds 12-bit data.
  */
-void
-mbe_checkGolayBlock(long int* block) {
-
+void mbe_checkGolayBlock(long int *block)
+{
     int i;
     int syndrome, eccexpected, eccbits, databits;
     uint32_t mask;
@@ -70,9 +69,8 @@ mbe_checkGolayBlock(long int* block) {
  * @param out Output bits, corrected, LSB at index 0, length 23.
  * @return Number of corrected bit errors in the protected portion.
  */
-int
-mbe_golay2312(char* in, char* out) {
-
+int mbe_golay2312(char *in, char *out)
+{
     int i, errs;
     uint32_t block = 0u;
 
@@ -109,8 +107,8 @@ mbe_golay2312(char* in, char* out) {
  * @return Number of corrected bit errors (0 or 1).
  * @note Uses a precomputed syndrome→bitmask LUT for thread safety (no lazy init).
  */
-int
-mbe_hamming1511(char* in, char* out) {
+int mbe_hamming1511(char *in, char *out)
+{
     int i, j, errs;
     uint32_t block = 0u;
     int syndrome, stmp, stmp2;
@@ -151,8 +149,8 @@ mbe_hamming1511(char* in, char* out) {
  * @return Number of corrected bit errors (0 or 1).
  * @note Uses a precomputed syndrome→bitmask LUT for thread safety (no lazy init).
  */
-int
-mbe_7100x4400hamming1511(char* in, char* out) {
+int mbe_7100x4400hamming1511(char *in, char *out)
+{
     int i, j, errs;
     uint32_t block = 0u;
     int syndrome, stmp, stmp2;

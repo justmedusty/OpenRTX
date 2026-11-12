@@ -28,12 +28,13 @@ static MBE_THREAD_LOCAL uint32_t mbe_comfort_noise_seed = 0x12345678u;
  * @param mp Parameter set to check.
  * @return Non-zero if smoothing should be applied.
  */
-int
-mbe_requiresAdaptiveSmoothing(const mbe_parms* mp) {
+int mbe_requiresAdaptiveSmoothing(const mbe_parms *mp)
+{
     if (MBE_UNLIKELY(!mp)) {
         return 0;
     }
-    return (mp->errorRate > MBE_ERROR_THRESHOLD_ENTRY) || (mp->errorCountTotal > 4);
+    return (mp->errorRate > MBE_ERROR_THRESHOLD_ENTRY)
+        || (mp->errorCountTotal > 4);
 }
 
 /**
@@ -45,8 +46,8 @@ mbe_requiresAdaptiveSmoothing(const mbe_parms* mp) {
  * @param mp Parameter set to check.
  * @return Non-zero if frame should be muted.
  */
-int
-mbe_requiresMuting(const mbe_parms* mp) {
+int mbe_requiresMuting(const mbe_parms *mp)
+{
     if (MBE_UNLIKELY(!mp)) {
         return 0;
     }
@@ -59,8 +60,8 @@ mbe_requiresMuting(const mbe_parms* mp) {
  * @param mp Parameter set to check.
  * @return Non-zero if repeatCount >= MBE_MAX_FRAME_REPEATS.
  */
-int
-mbe_isMaxFrameRepeat(const mbe_parms* mp) {
+int mbe_isMaxFrameRepeat(const mbe_parms *mp)
+{
     if (MBE_UNLIKELY(!mp)) {
         return 0;
     }
@@ -75,8 +76,8 @@ mbe_isMaxFrameRepeat(const mbe_parms* mp) {
  *
  * @param aout_buf Output buffer of 160 float samples.
  */
-void
-mbe_synthesizeComfortNoisef(float* aout_buf) {
+void mbe_synthesizeComfortNoisef(float *aout_buf)
+{
     if (MBE_UNLIKELY(!aout_buf)) {
         return;
     }
@@ -92,14 +93,16 @@ mbe_synthesizeComfortNoisef(float* aout_buf) {
         x ^= x >> 17;
         x ^= x << 5;
         mbe_comfort_noise_seed = x ? x : 0x6d25357bu;
-        float u1 = ((float)(mbe_comfort_noise_seed & 0xFFFFFF) + 1.0f) / 16777217.0f; /* (0, 1) to avoid log(0) */
+        float u1 = ((float)(mbe_comfort_noise_seed & 0xFFFFFF) + 1.0f)
+                 / 16777217.0f; /* (0, 1) to avoid log(0) */
 
         x = mbe_comfort_noise_seed;
         x ^= x << 13;
         x ^= x >> 17;
         x ^= x << 5;
         mbe_comfort_noise_seed = x ? x : 0x6d25357bu;
-        float u2 = (float)(mbe_comfort_noise_seed & 0xFFFFFF) / 16777216.0f; /* [0, 1) */
+        float u2 = (float)(mbe_comfort_noise_seed & 0xFFFFFF)
+                 / 16777216.0f; /* [0, 1) */
 
         /* Box-Muller transform: convert uniform to Gaussian N(0,1) */
         float r = sqrtf(-2.0f * logf(u1));
@@ -122,8 +125,8 @@ mbe_synthesizeComfortNoisef(float* aout_buf) {
  *
  * @param aout_buf Output buffer of 160 16-bit samples.
  */
-void
-mbe_synthesizeComfortNoise(short* aout_buf) {
+void mbe_synthesizeComfortNoise(short *aout_buf)
+{
     if (MBE_UNLIKELY(!aout_buf)) {
         return;
     }
@@ -157,14 +160,14 @@ mbe_synthesizeComfortNoise(short* aout_buf) {
  * @param cur_mp Current frame parameters (modified in-place).
  * @param prev_mp Previous frame parameters (for local energy).
  */
-void
-mbe_applyAdaptiveSmoothing(mbe_parms* cur_mp, const mbe_parms* prev_mp) {
+void mbe_applyAdaptiveSmoothing(mbe_parms *cur_mp, const mbe_parms *prev_mp)
+{
     if (MBE_UNLIKELY(!cur_mp || !prev_mp)) {
         return;
     }
 
-    float* M = cur_mp->Ml;
-    int* V = cur_mp->Vl;
+    float *M = cur_mp->Ml;
+    int *V = cur_mp->Vl;
     int L = cur_mp->L;
     float errorRate = cur_mp->errorRate;
     int errorTotal = cur_mp->errorCountTotal;
@@ -181,7 +184,8 @@ mbe_applyAdaptiveSmoothing(mbe_parms* cur_mp, const mbe_parms* prev_mp) {
         prevEnergy = MBE_DEFAULT_LOCAL_ENERGY;
     }
 
-    cur_mp->localEnergy = MBE_ENERGY_SMOOTH_ALPHA * prevEnergy + MBE_ENERGY_SMOOTH_BETA * RM0;
+    cur_mp->localEnergy = MBE_ENERGY_SMOOTH_ALPHA * prevEnergy
+                        + MBE_ENERGY_SMOOTH_BETA * RM0;
     if (cur_mp->localEnergy < MBE_MIN_LOCAL_ENERGY) {
         cur_mp->localEnergy = MBE_MIN_LOCAL_ENERGY;
     }
@@ -203,7 +207,8 @@ mbe_applyAdaptiveSmoothing(mbe_parms* cur_mp, const mbe_parms* prev_mp) {
         float energy = x8 * x8 * x8;
         if (errorRate <= MBE_ERROR_THRESHOLD_ENTRY && errorCount4 == 0) {
             /* Formula 1: exponential decay based on error rate */
-            VM = (MBE_ADAPTIVE_GAIN * energy) / expf(MBE_ADAPTIVE_EXPONENT * errorRate);
+            VM = (MBE_ADAPTIVE_GAIN * energy)
+               / expf(MBE_ADAPTIVE_EXPONENT * errorRate);
         } else {
             /* Formula 2: simple scaling for higher error conditions */
             VM = MBE_ADAPTIVE_ALT * energy;
@@ -233,7 +238,8 @@ mbe_applyAdaptiveSmoothing(mbe_parms* cur_mp, const mbe_parms* prev_mp) {
     if (errorRate <= MBE_ERROR_THRESHOLD_LOW && errorTotal <= 6) {
         Tm = MBE_DEFAULT_AMPLITUDE_THRESHOLD;
     } else {
-        Tm = MBE_AMPLITUDE_BASE - (MBE_AMPLITUDE_PENALTY_PER_ERROR * errorTotal) + prevThreshold;
+        Tm = MBE_AMPLITUDE_BASE - (MBE_AMPLITUDE_PENALTY_PER_ERROR * errorTotal)
+           + prevThreshold;
         if (Tm < 0) {
             Tm = 0;
         }

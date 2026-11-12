@@ -18,10 +18,10 @@
  * Example: if (MBE_LIKELY(ptr != NULL))
  */
 #if defined(__GNUC__) || defined(__clang__)
-#define MBE_LIKELY(x)   __builtin_expect(!!(x), 1)
+#define MBE_LIKELY(x) __builtin_expect(!!(x), 1)
 #define MBE_UNLIKELY(x) __builtin_expect(!!(x), 0)
 #else
-#define MBE_LIKELY(x)   (x)
+#define MBE_LIKELY(x) (x)
 #define MBE_UNLIKELY(x) (x)
 #endif
 

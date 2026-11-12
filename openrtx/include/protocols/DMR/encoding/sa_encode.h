@@ -19,10 +19,8 @@
  * 02110-1301, USA.
  */
 
-
 #ifndef _SA_ENCODE
 #define _SA_ENCODE
-
 
 void sa_encode_init(void);
 void sa_encode(IMBE_PARAM *imbe_param);

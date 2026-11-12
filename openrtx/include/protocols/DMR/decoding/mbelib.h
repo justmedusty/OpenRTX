@@ -125,28 +125,28 @@ typedef struct mbe_parameters mbe_parms;
  * @brief Correct a (23,12) Golay encoded block in-place and extract data.
  * @param block Pointer to packed 23-bit block (upper bits ignored). On return, contains 12-bit data.
  */
-MBE_API void mbe_checkGolayBlock(long int* block);
+MBE_API void mbe_checkGolayBlock(long int *block);
 /**
  * @brief Decode a (23,12) Golay codeword.
  * @param in  Input bits, LSB at index 0, length 23.
  * @param out Output bits, corrected, LSB at index 0, length 23.
  * @return Number of corrected bit errors in the protected portion.
  */
-MBE_API int mbe_golay2312(char* in, char* out);
+MBE_API int mbe_golay2312(char *in, char *out);
 /**
  * @brief Decode a (15,11) Hamming codeword (IMBE/AMBE common use).
  * @param in  Input bits, LSB at index 0, length 15.
  * @param out Output bits, corrected, LSB at index 0, length 15.
  * @return Number of corrected bit errors (0 or 1).
  */
-MBE_API int mbe_hamming1511(char* in, char* out);
+MBE_API int mbe_hamming1511(char *in, char *out);
 /**
  * @brief Decode a (15,11) Hamming codeword with IMBE 7100x4400 mapping.
  * @param in  Input bits, LSB at index 0, length 15.
  * @param out Output bits, corrected, LSB at index 0, length 15.
  * @return Number of corrected bit errors (0 or 1).
  */
-MBE_API int mbe_7100x4400hamming1511(char* in, char* out);
+MBE_API int mbe_7100x4400hamming1511(char *in, char *out);
 
 /* Prototypes from ambe3600x2400.c */
 /**
@@ -161,7 +161,7 @@ MBE_API int mbe_eccAmbe3600x2400C0(char ambe_fr[4][24]);
  * @param ambe_d  Output parameter bits (49).
  * @return Number of corrected errors in protected fields.
  */
-MBE_API int mbe_eccAmbe3600x2400Data(char ambe_fr[4][24], char* ambe_d);
+MBE_API int mbe_eccAmbe3600x2400Data(char ambe_fr[4][24], char *ambe_d);
 /**
  * @brief Decode AMBE 2400 parameters from demodulated bits.
  * @param ambe_d  Demodulated AMBE parameter bits (49).
@@ -169,7 +169,8 @@ MBE_API int mbe_eccAmbe3600x2400Data(char ambe_fr[4][24], char* ambe_d);
  * @param prev_mp Input: previous frame parameters (for prediction).
  * @return Tone index or 0 for voice; implementation-specific non-zero for tone frames.
  */
-MBE_API int mbe_decodeAmbe2400Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp);
+MBE_API int mbe_decodeAmbe2400Parms(char *ambe_d, mbe_parms *cur_mp,
+                                    mbe_parms *prev_mp);
 /**
  * @brief Demodulate interleaved AMBE 3600x2400 data in-place.
  * @param ambe_fr AMBE frame as 4x24 bitplanes, updated in-place.
@@ -187,15 +188,20 @@ MBE_API void mbe_demodulateAmbe3600x2400Data(char ambe_fr[4][24]);
  * @param prev_mp_enhanced In/out: enhanced previous parameters for continuity.
  * @param uvquality Unvoiced synthesis quality (1..64).
  */
-MBE_API void mbe_processAmbe2400Dataf(float* aout_buf, int* errs, int* errs2, char* err_str, char ambe_d[49],
-                                      mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced,
+MBE_API void mbe_processAmbe2400Dataf(float *aout_buf, int *errs, int *errs2,
+                                      char *err_str, char ambe_d[49],
+                                      mbe_parms *cur_mp, mbe_parms *prev_mp,
+                                      mbe_parms *prev_mp_enhanced,
                                       int uvquality);
 /**
  * @brief Process AMBE 2400 parameters into 8 kHz 16-bit PCM.
  * @see mbe_processAmbe2400Dataf for details.
  */
-MBE_API void mbe_processAmbe2400Data(short* aout_buf, int* errs, int* errs2, char* err_str, char ambe_d[49],
-                                     mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processAmbe2400Data(short *aout_buf, int *errs, int *errs2,
+                                     char *err_str, char ambe_d[49],
+                                     mbe_parms *cur_mp, mbe_parms *prev_mp,
+                                     mbe_parms *prev_mp_enhanced,
+                                     int uvquality);
 /**
  * @brief Process a complete AMBE 3600x2400 frame into 8 kHz float PCM.
  * @param aout_buf Output buffer of 160 float samples.
@@ -205,106 +211,126 @@ MBE_API void mbe_processAmbe2400Data(short* aout_buf, int* errs, int* errs2, cha
  * @param cur_mp,prev_mp,prev_mp_enhanced Parameter state as per Dataf variant.
  * @param uvquality Unvoiced synthesis quality (1..64).
  */
-MBE_API void mbe_processAmbe3600x2400Framef(float* aout_buf, int* errs, int* errs2, char* err_str, char ambe_fr[4][24],
-                                            char ambe_d[49], mbe_parms* cur_mp, mbe_parms* prev_mp,
-                                            mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processAmbe3600x2400Framef(
+    float *aout_buf, int *errs, int *errs2, char *err_str, char ambe_fr[4][24],
+    char ambe_d[49], mbe_parms *cur_mp, mbe_parms *prev_mp,
+    mbe_parms *prev_mp_enhanced, int uvquality);
 /**
  * @brief Process a complete AMBE 3600x2400 frame into 8 kHz 16-bit PCM.
  * @see mbe_processAmbe3600x2400Framef for details.
  */
-MBE_API void mbe_processAmbe3600x2400Frame(short* aout_buf, int* errs, int* errs2, char* err_str, char ambe_fr[4][24],
-                                           char ambe_d[49], mbe_parms* cur_mp, mbe_parms* prev_mp,
-                                           mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processAmbe3600x2400Frame(
+    short *aout_buf, int *errs, int *errs2, char *err_str, char ambe_fr[4][24],
+    char ambe_d[49], mbe_parms *cur_mp, mbe_parms *prev_mp,
+    mbe_parms *prev_mp_enhanced, int uvquality);
 
 /* Prototypes from ambe3600x2450.c */
 /** @brief ECC correction for AMBE 3600x2450 C0. */
 MBE_API int mbe_eccAmbe3600x2450C0(char ambe_fr[4][24]);
 /** @brief ECC and parameter packing for AMBE 3600x2450. */
-MBE_API int mbe_eccAmbe3600x2450Data(char ambe_fr[4][24], char* ambe_d);
+MBE_API int mbe_eccAmbe3600x2450Data(char ambe_fr[4][24], char *ambe_d);
 /** @brief Decode AMBE 2450 parameters. */
-MBE_API int mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp);
+MBE_API int mbe_decodeAmbe2450Parms(char *ambe_d, mbe_parms *cur_mp,
+                                    mbe_parms *prev_mp);
 /** @brief Demodulate AMBE 3600x2450 interleaved data. */
 MBE_API void mbe_demodulateAmbe3600x2450Data(char ambe_fr[4][24]);
 /** @brief Process AMBE 2450 parameters into float PCM. */
-MBE_API void mbe_processAmbe2450Dataf(float* aout_buf, int* errs, int* errs2, char* err_str, char ambe_d[49],
-                                      mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced,
+MBE_API void mbe_processAmbe2450Dataf(float *aout_buf, int *errs, int *errs2,
+                                      char *err_str, char ambe_d[49],
+                                      mbe_parms *cur_mp, mbe_parms *prev_mp,
+                                      mbe_parms *prev_mp_enhanced,
                                       int uvquality);
 /** @brief Process AMBE 2450 parameters into 16-bit PCM. */
-MBE_API void mbe_processAmbe2450Data(short* aout_buf, int* errs, int* errs2, char* err_str, char ambe_d[49],
-                                     mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processAmbe2450Data(short *aout_buf, int *errs, int *errs2,
+                                     char *err_str, char ambe_d[49],
+                                     mbe_parms *cur_mp, mbe_parms *prev_mp,
+                                     mbe_parms *prev_mp_enhanced,
+                                     int uvquality);
 /** @brief Process AMBE 3600x2450 frame into float PCM. */
-MBE_API void mbe_processAmbe3600x2450Framef(float* aout_buf, int* errs, int* errs2, char* err_str, char ambe_fr[4][24],
-                                            char ambe_d[49], mbe_parms* cur_mp, mbe_parms* prev_mp,
-                                            mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processAmbe3600x2450Framef(
+    float *aout_buf, int *errs, int *errs2, char *err_str, char ambe_fr[4][24],
+    char ambe_d[49], mbe_parms *cur_mp, mbe_parms *prev_mp,
+    mbe_parms *prev_mp_enhanced, int uvquality);
 /** @brief Process AMBE 3600x2450 frame into 16-bit PCM. */
-MBE_API void mbe_processAmbe3600x2450Frame(short* aout_buf, int* errs, int* errs2, char* err_str, char ambe_fr[4][24],
-                                           char ambe_d[49], mbe_parms* cur_mp, mbe_parms* prev_mp,
-                                           mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processAmbe3600x2450Frame(
+    short *aout_buf, int *errs, int *errs2, char *err_str, char ambe_fr[4][24],
+    char ambe_d[49], mbe_parms *cur_mp, mbe_parms *prev_mp,
+    mbe_parms *prev_mp_enhanced, int uvquality);
 
 /* Prototypes from imbe7200x4400.c */
 /** @brief Print IMBE 4400 parameter bits to stderr (debug). */
-MBE_API void mbe_dumpImbe4400Data(char* imbe_d);
+MBE_API void mbe_dumpImbe4400Data(char *imbe_d);
 /** @brief Print IMBE 7200x4400 parameter bits to stderr (debug). */
-MBE_API void mbe_dumpImbe7200x4400Data(char* imbe_d);
+MBE_API void mbe_dumpImbe7200x4400Data(char *imbe_d);
 /** @brief Print a raw IMBE 7200x4400 frame to stderr (debug). */
 MBE_API void mbe_dumpImbe7200x4400Frame(char imbe_fr[8][23]);
 /** @brief ECC correction for IMBE 7200x4400 C0. */
 MBE_API int mbe_eccImbe7200x4400C0(char imbe_fr[8][23]);
 /** @brief ECC and parameter packing for IMBE 7200x4400. */
-MBE_API int mbe_eccImbe7200x4400Data(char imbe_fr[8][23], char* imbe_d);
+MBE_API int mbe_eccImbe7200x4400Data(char imbe_fr[8][23], char *imbe_d);
 /** @brief Decode IMBE 4400 parameters. */
-MBE_API int mbe_decodeImbe4400Parms(char* imbe_d, mbe_parms* cur_mp, mbe_parms* prev_mp);
+MBE_API int mbe_decodeImbe4400Parms(char *imbe_d, mbe_parms *cur_mp,
+                                    mbe_parms *prev_mp);
 /** @brief Demodulate IMBE 7200x4400 interleaved data. */
 MBE_API void mbe_demodulateImbe7200x4400Data(char imbe[8][23]);
 /** @brief Process IMBE 4400 parameters into float PCM. */
-MBE_API void mbe_processImbe4400Dataf(float* aout_buf, int* errs, int* errs2, char* err_str, char imbe_d[88],
-                                      mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced,
+MBE_API void mbe_processImbe4400Dataf(float *aout_buf, int *errs, int *errs2,
+                                      char *err_str, char imbe_d[88],
+                                      mbe_parms *cur_mp, mbe_parms *prev_mp,
+                                      mbe_parms *prev_mp_enhanced,
                                       int uvquality);
 /** @brief Process IMBE 4400 parameters into 16-bit PCM. */
-MBE_API void mbe_processImbe4400Data(short* aout_buf, int* errs, int* errs2, char* err_str, char imbe_d[88],
-                                     mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processImbe4400Data(short *aout_buf, int *errs, int *errs2,
+                                     char *err_str, char imbe_d[88],
+                                     mbe_parms *cur_mp, mbe_parms *prev_mp,
+                                     mbe_parms *prev_mp_enhanced,
+                                     int uvquality);
 /** @brief Process IMBE 7200x4400 frame into float PCM. */
-MBE_API void mbe_processImbe7200x4400Framef(float* aout_buf, int* errs, int* errs2, char* err_str, char imbe_fr[8][23],
-                                            char imbe_d[88], mbe_parms* cur_mp, mbe_parms* prev_mp,
-                                            mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processImbe7200x4400Framef(
+    float *aout_buf, int *errs, int *errs2, char *err_str, char imbe_fr[8][23],
+    char imbe_d[88], mbe_parms *cur_mp, mbe_parms *prev_mp,
+    mbe_parms *prev_mp_enhanced, int uvquality);
 /** @brief Process IMBE 7200x4400 frame into 16-bit PCM. */
-MBE_API void mbe_processImbe7200x4400Frame(short* aout_buf, int* errs, int* errs2, char* err_str, char imbe_fr[8][23],
-                                           char imbe_d[88], mbe_parms* cur_mp, mbe_parms* prev_mp,
-                                           mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processImbe7200x4400Frame(
+    short *aout_buf, int *errs, int *errs2, char *err_str, char imbe_fr[8][23],
+    char imbe_d[88], mbe_parms *cur_mp, mbe_parms *prev_mp,
+    mbe_parms *prev_mp_enhanced, int uvquality);
 
 /* Prototypes from imbe7100x4400.c */
 /** @brief Print IMBE 7100x4400 parameter bits to stderr (debug). */
-MBE_API void mbe_dumpImbe7100x4400Data(char* imbe_d);
+MBE_API void mbe_dumpImbe7100x4400Data(char *imbe_d);
 /** @brief Print IMBE 7100x4400 frame to stderr (debug). */
 MBE_API void mbe_dumpImbe7100x4400Frame(char imbe_fr[7][24]);
 /** @brief ECC correction for IMBE 7100x4400 C0. */
 MBE_API int mbe_eccImbe7100x4400C0(char imbe_fr[7][24]);
 /** @brief ECC and parameter packing for IMBE 7100x4400. */
-MBE_API int mbe_eccImbe7100x4400Data(char imbe_fr[7][24], char* imbe_d);
+MBE_API int mbe_eccImbe7100x4400Data(char imbe_fr[7][24], char *imbe_d);
 /** @brief Demodulate IMBE 7100x4400 interleaved data. */
 MBE_API void mbe_demodulateImbe7100x4400Data(char imbe[7][24]);
 /** @brief Convert IMBE 7100x4400 parameter set into 7200x4400 layout. */
-MBE_API void mbe_convertImbe7100to7200(char* imbe_d);
+MBE_API void mbe_convertImbe7100to7200(char *imbe_d);
 /** @brief Process IMBE 7100x4400 frame into float PCM. */
-MBE_API void mbe_processImbe7100x4400Framef(float* aout_buf, int* errs, int* errs2, char* err_str, char imbe_fr[7][24],
-                                            char imbe_d[88], mbe_parms* cur_mp, mbe_parms* prev_mp,
-                                            mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processImbe7100x4400Framef(
+    float *aout_buf, int *errs, int *errs2, char *err_str, char imbe_fr[7][24],
+    char imbe_d[88], mbe_parms *cur_mp, mbe_parms *prev_mp,
+    mbe_parms *prev_mp_enhanced, int uvquality);
 /** @brief Process IMBE 7100x4400 frame into 16-bit PCM. */
-MBE_API void mbe_processImbe7100x4400Frame(short* aout_buf, int* errs, int* errs2, char* err_str, char imbe_fr[7][24],
-                                           char imbe_d[88], mbe_parms* cur_mp, mbe_parms* prev_mp,
-                                           mbe_parms* prev_mp_enhanced, int uvquality);
+MBE_API void mbe_processImbe7100x4400Frame(
+    short *aout_buf, int *errs, int *errs2, char *err_str, char imbe_fr[7][24],
+    char imbe_d[88], mbe_parms *cur_mp, mbe_parms *prev_mp,
+    mbe_parms *prev_mp_enhanced, int uvquality);
 
 /* Prototypes from mbelib.c */
 /**
  * @brief Write the mbelib-neo version string into the provided buffer.
  * @param str Output buffer receiving a NUL-terminated version string.
  */
-MBE_API void mbe_printVersion(char* str);
+MBE_API void mbe_printVersion(char *str);
 /**
  * @brief Get a pointer to a static NUL-terminated version string.
  *        The returned pointer remains valid for the lifetime of the program.
  */
-MBE_API const char* mbe_versionString(void);
+MBE_API const char *mbe_versionString(void);
 
 /**
  * @brief Set the thread-local RNG seed used by unvoiced synthesis noise.
@@ -317,32 +343,34 @@ MBE_API void mbe_setThreadRngSeed(uint32_t seed);
  * @param cur_mp Source parameters.
  * @param prev_mp Destination parameters.
  */
-MBE_API void mbe_moveMbeParms(mbe_parms* cur_mp, mbe_parms* prev_mp);
+MBE_API void mbe_moveMbeParms(mbe_parms *cur_mp, mbe_parms *prev_mp);
 /**
  * @brief Replace current parameters with the last known parameters.
  * @param cur_mp Destination parameters to fill.
  * @param prev_mp Source parameters from previous frame.
  */
-MBE_API void mbe_useLastMbeParms(mbe_parms* cur_mp, mbe_parms* prev_mp);
+MBE_API void mbe_useLastMbeParms(mbe_parms *cur_mp, mbe_parms *prev_mp);
 /**
  * @brief Initialize parameter state for decoding and synthesis.
  * @param cur_mp Output: current parameter state.
  * @param prev_mp Output: previous parameter state (zeroed/reset).
  * @param prev_mp_enhanced Output: enhanced previous parameter state.
  */
-MBE_API void mbe_initMbeParms(mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced);
+MBE_API void mbe_initMbeParms(mbe_parms *cur_mp, mbe_parms *prev_mp,
+                              mbe_parms *prev_mp_enhanced);
 /**
  * @brief Apply spectral amplitude enhancement in-place.
  * @param cur_mp In/out parameter set to enhance.
  */
-MBE_API void mbe_spectralAmpEnhance(mbe_parms* cur_mp);
+MBE_API void mbe_spectralAmpEnhance(mbe_parms *cur_mp);
 /**
  * @brief Synthesize tone frame (AMBE tone indices) into float PCM.
  * @param aout_buf Output buffer of 160 float samples.
  * @param ambe_d   AMBE parameter bits (49).
  * @param cur_mp   Current parameter set (tone synthesis state).
  */
-MBE_API void mbe_synthesizeTonef(float* aout_buf, char* ambe_d, mbe_parms* cur_mp);
+MBE_API void mbe_synthesizeTonef(float *aout_buf, char *ambe_d,
+                                 mbe_parms *cur_mp);
 /**
  * @brief Synthesize tone for D-STAR style indices into float PCM.
  * @param aout_buf Output buffer of 160 float samples.
@@ -350,11 +378,12 @@ MBE_API void mbe_synthesizeTonef(float* aout_buf, char* ambe_d, mbe_parms* cur_m
  * @param cur_mp   Current parameter set.
  * @param ID1      Tone index selector.
  */
-MBE_API void mbe_synthesizeTonefdstar(float* aout_buf, char* ambe_d, mbe_parms* cur_mp, int ID1);
+MBE_API void mbe_synthesizeTonefdstar(float *aout_buf, char *ambe_d,
+                                      mbe_parms *cur_mp, int ID1);
 /** @brief Fill float PCM buffer with 160 samples of silence. */
-MBE_API void mbe_synthesizeSilencef(float* aout_buf);
+MBE_API void mbe_synthesizeSilencef(float *aout_buf);
 /** @brief Fill 16-bit PCM buffer with 160 samples of silence. */
-MBE_API void mbe_synthesizeSilence(short* aout_buf);
+MBE_API void mbe_synthesizeSilence(short *aout_buf);
 /**
  * @brief Synthesize one speech frame into float PCM.
  * @param aout_buf Output buffer of 160 float samples.
@@ -362,20 +391,22 @@ MBE_API void mbe_synthesizeSilence(short* aout_buf);
  * @param prev_mp  Previous parameter set.
  * @param uvquality Unvoiced synthesis quality (1..64).
  */
-MBE_API void mbe_synthesizeSpeechf(float* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, int uvquality);
+MBE_API void mbe_synthesizeSpeechf(float *aout_buf, mbe_parms *cur_mp,
+                                   mbe_parms *prev_mp, int uvquality);
 /** @brief Synthesize one speech frame into 16-bit PCM. */
-MBE_API void mbe_synthesizeSpeech(short* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, int uvquality);
+MBE_API void mbe_synthesizeSpeech(short *aout_buf, mbe_parms *cur_mp,
+                                  mbe_parms *prev_mp, int uvquality);
 /**
  * @brief Convert 160 float samples to clipped/scaled 16-bit PCM.
  * @param float_buf Input 160 float samples.
  * @param aout_buf  Output 160 16-bit samples.
  */
-MBE_API void mbe_floattoshort(float* float_buf, short* aout_buf);
+MBE_API void mbe_floattoshort(float *float_buf, short *aout_buf);
 
 /* === Frame repeat and muting functions === */
 
 /** Maximum consecutive frame repeats before muting. */
-#define MBE_MAX_FRAME_REPEATS     4
+#define MBE_MAX_FRAME_REPEATS 4
 
 /** IMBE muting threshold (8.75% error rate). */
 #define MBE_MUTING_THRESHOLD_IMBE 0.0875f
@@ -388,26 +419,26 @@ MBE_API void mbe_floattoshort(float* float_buf, short* aout_buf);
  * @param mp Parameter set to check.
  * @return Non-zero if frame should be muted.
  */
-MBE_API int mbe_requiresMuting(const mbe_parms* mp);
+MBE_API int mbe_requiresMuting(const mbe_parms *mp);
 
 /**
  * @brief Check if max repeat threshold has been exceeded.
  * @param mp Parameter set to check.
  * @return Non-zero if repeatCount >= MBE_MAX_FRAME_REPEATS.
  */
-MBE_API int mbe_isMaxFrameRepeat(const mbe_parms* mp);
+MBE_API int mbe_isMaxFrameRepeat(const mbe_parms *mp);
 
 /**
  * @brief Generate comfort noise for muted frames.
  * @param aout_buf Output buffer of 160 float samples.
  */
-MBE_API void mbe_synthesizeComfortNoisef(float* aout_buf);
+MBE_API void mbe_synthesizeComfortNoisef(float *aout_buf);
 
 /**
  * @brief Generate comfort noise for muted frames (16-bit).
  * @param aout_buf Output buffer of 160 16-bit samples.
  */
-MBE_API void mbe_synthesizeComfortNoise(short* aout_buf);
+MBE_API void mbe_synthesizeComfortNoise(short *aout_buf);
 
 /* === Adaptive smoothing functions === */
 
@@ -417,14 +448,15 @@ MBE_API void mbe_synthesizeComfortNoise(short* aout_buf);
  * @param cur_mp Current frame parameters (modified in-place).
  * @param prev_mp Previous frame parameters (for local energy).
  */
-MBE_API void mbe_applyAdaptiveSmoothing(mbe_parms* cur_mp, const mbe_parms* prev_mp);
+MBE_API void mbe_applyAdaptiveSmoothing(mbe_parms *cur_mp,
+                                        const mbe_parms *prev_mp);
 
 /**
  * @brief Check if adaptive smoothing is required based on error rates.
  * @param mp Parameter set to check.
  * @return Non-zero if smoothing should be applied.
  */
-MBE_API int mbe_requiresAdaptiveSmoothing(const mbe_parms* mp);
+MBE_API int mbe_requiresAdaptiveSmoothing(const mbe_parms *mp);
 
 #ifdef __cplusplus
 }

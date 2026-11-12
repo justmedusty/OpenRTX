@@ -46,6 +46,6 @@ void mbe_demodulateAmbe3600Data_common(char fr[4][24]);
  * @param out49  Output parameter bits (49 entries).
  * @return Number of corrected bit errors in protected fields.
  */
-int mbe_eccAmbe3600Data_common(char fr[4][24], char* out49);
+int mbe_eccAmbe3600Data_common(char fr[4][24], char *out49);
 
 #endif /* MBELIB_NEO_INTERNAL_AMBE_COMMON_H */

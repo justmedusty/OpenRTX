@@ -19,7 +19,6 @@
  * 02110-1301, USA.
  */
 
-
 #ifndef _PITCH_REF
 #define _PITCH_REF
 

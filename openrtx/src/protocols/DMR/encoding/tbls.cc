@@ -18,8 +18,8 @@
  * Software Foundation, Inc., 51 Franklin Street, Boston, MA
  * 02110-1301, USA.
  */
-#include "typedef.h"
-#include "tbls.h"
+#include "protocols/DMR/encoding/typedef.h"
+#include "protocols/DMR/encoding/tbls.h"
 
 
 //-----------------------------------------------------------------------------

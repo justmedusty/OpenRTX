@@ -15,8 +15,8 @@
 #include "protocols/DMR/decoding/ambe_common.h"
 #include "protocols/DMR/decoding/mbelib.h"
 
-int
-mbe_eccAmbe3600C0_common(char fr[4][24]) {
+int mbe_eccAmbe3600C0_common(char fr[4][24])
+{
     int j, errs;
     char in[23], out[23];
     for (j = 0; j < 23; j++) {
@@ -29,8 +29,8 @@ mbe_eccAmbe3600C0_common(char fr[4][24]) {
     return errs;
 }
 
-void
-mbe_demodulateAmbe3600Data_common(char fr[4][24]) {
+void mbe_demodulateAmbe3600Data_common(char fr[4][24])
+{
     int i, j, k;
     unsigned short pr[115];
     unsigned short foo = 0;
@@ -42,7 +42,9 @@ mbe_demodulateAmbe3600Data_common(char fr[4][24]) {
     }
     pr[0] = (unsigned short)(16 * foo);
     for (i = 1; i < 24; i++) {
-        pr[i] = (unsigned short)((173 * pr[i - 1]) + 13849 - (65536 * (((173 * pr[i - 1]) + 13849) / 65536)));
+        pr[i] =
+            (unsigned short)((173 * pr[i - 1]) + 13849
+                             - (65536 * (((173 * pr[i - 1]) + 13849) / 65536)));
     }
     for (i = 1; i < 24; i++) {
         pr[i] = (unsigned short)(pr[i] / 32768);
@@ -56,8 +58,8 @@ mbe_demodulateAmbe3600Data_common(char fr[4][24]) {
     }
 }
 
-int
-mbe_eccAmbe3600Data_common(char fr[4][24], char* out49) {
+int mbe_eccAmbe3600Data_common(char fr[4][24], char *out49)
+{
     int j, errs;
     char *ambe, gin[24], gout[24];
     ambe = out49;

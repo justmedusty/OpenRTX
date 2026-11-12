@@ -16,20 +16,20 @@ class imbe_vocoder_impl;
 class imbe_vocoder
 {
 public:
-	imbe_vocoder(void);		// constructor
-	~imbe_vocoder();		// destructor
+    imbe_vocoder(void); // constructor
+    ~imbe_vocoder();    // destructor
 
-	// imbe_encode compresses 160 samples (in unsigned int format)
-	// outputs u[] vectors as frame_vector[]
-	void imbe_encode(int16_t *frame_vector, int16_t *snd);
+    // imbe_encode compresses 160 samples (in unsigned int format)
+    // outputs u[] vectors as frame_vector[]
+    void imbe_encode(int16_t *frame_vector, int16_t *snd);
 
-	// encode_4400 encodes PCM to IMBE frame (88 bits)
-	void encode_4400(int16_t *snd, uint8_t *imbe);
+    // encode_4400 encodes PCM to IMBE frame (88 bits)
+    void encode_4400(int16_t *snd, uint8_t *imbe);
 
-	// Get access to IMBE parameters (for analysis)
-	const IMBE_PARAM* param(void);
+    // Get access to IMBE parameters (for analysis)
+    const IMBE_PARAM *param(void);
 
 private:
-	imbe_vocoder_impl *Impl;
+    imbe_vocoder_impl *Impl;
 };
 #endif /* INCLUDED_IMBE_VOCODER_H */

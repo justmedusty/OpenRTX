@@ -12,24 +12,24 @@
 #include "mbelib.h"
 
 /* FFT size for unvoiced synthesis */
-#define MBE_FFT_SIZE             256
+#define MBE_FFT_SIZE 256
 
 /* Scaling coefficient for unvoiced synthesis (Algorithm #120) */
 #define MBE_UNVOICED_SCALE_COEFF 146.17696f
 
 /* 256 / (2 * PI) constant for bin frequency calculation */
-#define MBE_256_OVER_2PI         (256.0f / (2.0f * 3.14159265358979323846f))
+#define MBE_256_OVER_2PI (256.0f / (2.0f * 3.14159265358979323846f))
 
 /* LCG constants for JMBE-compatible noise generation */
-#define MBE_LCG_A                171.0f
-#define MBE_LCG_B                11213.0f
-#define MBE_LCG_M                53125.0f
+#define MBE_LCG_A 171.0f
+#define MBE_LCG_B 11213.0f
+#define MBE_LCG_M 53125.0f
 
 /* Default LCG seed - matches JMBE's MBENoiseSequenceGenerator initial value */
-#define MBE_LCG_DEFAULT_SEED     3147.0f
+#define MBE_LCG_DEFAULT_SEED 3147.0f
 
 /* Noise buffer overlap size for continuity between frames */
-#define MBE_NOISE_OVERLAP        96
+#define MBE_NOISE_OVERLAP 96
 
 /**
  * @brief Opaque FFT plan handle for unvoiced synthesis.
@@ -44,14 +44,14 @@ typedef struct mbe_fft_plan mbe_fft_plan;
  *
  * @return Allocated plan, or NULL on failure.
  */
-mbe_fft_plan* mbe_fft_plan_alloc(void);
+mbe_fft_plan *mbe_fft_plan_alloc(void);
 
 /**
  * @brief Free an FFT plan.
  *
  * @param plan Plan to free.
  */
-void mbe_fft_plan_free(mbe_fft_plan* plan);
+void mbe_fft_plan_free(mbe_fft_plan *plan);
 
 /**
  * @brief Generate LCG noise samples for unvoiced synthesis.
@@ -63,7 +63,7 @@ void mbe_fft_plan_free(mbe_fft_plan* plan);
  * @param count Number of samples to generate.
  * @param seed In/out LCG state.
  */
-void mbe_generate_noise_lcg(float* buffer, int count, float* seed);
+void mbe_generate_noise_lcg(float *buffer, int count, float *seed);
 
 /**
  * @brief Generate noise with overlap from previous frame.
@@ -75,7 +75,8 @@ void mbe_generate_noise_lcg(float* buffer, int count, float* seed);
  * @param seed In/out LCG state.
  * @param overlap In/out 96-sample overlap buffer.
  */
-void mbe_generate_noise_with_overlap(float* buffer, float* seed, float* overlap);
+void mbe_generate_noise_with_overlap(float *buffer, float *seed,
+                                     float *overlap);
 
 /**
  * @brief Synthesize unvoiced speech using FFT method.
@@ -91,7 +92,8 @@ void mbe_generate_noise_with_overlap(float* buffer, float* seed, float* overlap)
  * @param prev_mp Previous frame parameters (provides previousUw for WOLA).
  * @param plan FFT plan (reusable).
  */
-void mbe_synthesizeUnvoicedFFT(float* output, mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_fft_plan* plan);
+void mbe_synthesizeUnvoicedFFT(float *output, mbe_parms *cur_mp,
+                               mbe_parms *prev_mp, mbe_fft_plan *plan);
 
 /**
  * @brief Synthesize unvoiced speech using a pre-generated noise buffer.
@@ -106,8 +108,9 @@ void mbe_synthesizeUnvoicedFFT(float* output, mbe_parms* cur_mp, mbe_parms* prev
  * @param plan FFT plan (reusable).
  * @param noise_buffer Pre-generated 256-sample noise buffer.
  */
-void mbe_synthesizeUnvoicedFFTWithNoise(float* output, mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_fft_plan* plan,
-                                        const float* noise_buffer);
+void mbe_synthesizeUnvoicedFFTWithNoise(float *output, mbe_parms *cur_mp,
+                                        mbe_parms *prev_mp, mbe_fft_plan *plan,
+                                        const float *noise_buffer);
 
 /**
  * @brief Get the 211-element synthesis window value.
@@ -131,6 +134,7 @@ float mbe_synthesisWindow(int n);
  * @param currUw Current frame's inverse FFT output (256 samples).
  * @param N Frame length (typically 160).
  */
-void mbe_wola_combine(float* output, const float* prevUw, const float* currUw, int N);
+void mbe_wola_combine(float *output, const float *prevUw, const float *currUw,
+                      int N);
 
 #endif /* MBEINT_MBE_UNVOICED_FFT_H */

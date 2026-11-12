@@ -89,8 +89,8 @@ typedef char Char;
  */
 #if SCHAR_MAX == 127
 typedef signed char Word8;
-#define minWord8  SCHAR_MIN
-#define maxWord8  SCHAR_MAX
+#define minWord8 SCHAR_MIN
+#define maxWord8 SCHAR_MAX
 
 typedef unsigned char UWord8;
 #define minUWord8 0
@@ -99,46 +99,44 @@ typedef unsigned char UWord8;
 #error cannot find 8-bit type
 #endif
 
-
 /*
  ********* define 16 bit signed/unsigned types & constants
  */
 #if INT_MAX == 32767
 typedef int Word16;
-#define minWord16     INT_MIN
-#define maxWord16     INT_MAX
+#define minWord16 INT_MIN
+#define maxWord16 INT_MAX
 typedef unsigned int UWord16;
-#define minUWord16    0
-#define maxUWord16    UINT_MAX
+#define minUWord16 0
+#define maxUWord16 UINT_MAX
 #elif SHRT_MAX == 32767
 typedef short Word16;
-#define minWord16     SHRT_MIN
-#define maxWord16     SHRT_MAX
+#define minWord16 SHRT_MIN
+#define maxWord16 SHRT_MAX
 typedef unsigned short UWord16;
-#define minUWord16    0
-#define maxUWord16    USHRT_MAX
+#define minUWord16 0
+#define maxUWord16 USHRT_MAX
 #else
 #error cannot find 16-bit type
 #endif
-
 
 /*
  ********* define 32 bit signed/unsigned types & constants
  */
 #if INT_MAX == 2147483647
 typedef int Word32;
-#define minWord32     INT_MIN
-#define maxWord32     INT_MAX
+#define minWord32 INT_MIN
+#define maxWord32 INT_MAX
 typedef unsigned int UWord32;
-#define minUWord32    0
-#define maxUWord32    UINT_MAX
+#define minUWord32 0
+#define maxUWord32 UINT_MAX
 #elif LONG_MAX == 2147483647
 typedef long Word32;
-#define minWord32     LONG_MIN
-#define maxWord32     LONG_MAX
+#define minWord32 LONG_MIN
+#define maxWord32 LONG_MAX
 typedef unsigned long UWord32;
-#define minUWord32    0
-#define maxUWord32    ULONG_MAX
+#define minUWord32 0
+#define maxUWord32 ULONG_MAX
 #else
 #error cannot find 32-bit type
 #endif
@@ -151,20 +149,20 @@ typedef unsigned long UWord32;
  */
 #if 0
 typedef float Float;
-#define maxFloat      FLT_MAX
-#define minFloat      FLT_MIN
+#define maxFloat FLT_MAX
+#define minFloat FLT_MIN
 #else
 typedef double Float;
-#define maxFloat      DBL_MAX
-#define minFloat      DBL_MIN
+#define maxFloat DBL_MAX
+#define minFloat DBL_MIN
 #endif
 
 /*
  ********* define complex type
  */
 typedef struct {
-  Float r;  /* real      part */
-  Float i;  /* imaginary part */
+    Float r; /* real      part */
+    Float i; /* imaginary part */
 } CPX;
 
 /*
@@ -198,4 +196,3 @@ typedef int Bool;
 #endif
 
 #endif
-

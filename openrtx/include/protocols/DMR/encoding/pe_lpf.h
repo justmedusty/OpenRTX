@@ -22,7 +22,6 @@
 #ifndef _PE_LPF
 #define _PE_LPF
 
-
 //-----------------------------------------------------------------------------
 //	PURPOSE:
 //		Low-pass filter for pitch estimator
@@ -42,6 +41,5 @@
 //
 //-----------------------------------------------------------------------------
 void pe_lpf(Word16 *sigin, Word16 *sigout, Word16 *mem, Word16 len);
-
 
 #endif

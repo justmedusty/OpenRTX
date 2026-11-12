@@ -37,7 +37,7 @@ struct ambe2450_dct_cache {
     float idct_cos[18][18][18]; /* [ji][j][k] for ji=1..17, j=1..ji, k=1..ji */
 };
 
-static MBE_THREAD_LOCAL struct ambe2450_dct_cache ambe2450_cache = {0};
+static MBE_THREAD_LOCAL struct ambe2450_dct_cache ambe2450_cache = { 0 };
 
 /**
  * @brief Initialize or return the thread-local AMBE 2450 DCT cache.
@@ -47,8 +47,8 @@ static MBE_THREAD_LOCAL struct ambe2450_dct_cache ambe2450_cache = {0};
  *
  * @return Pointer to the initialized cache.
  */
-static struct ambe2450_dct_cache*
-ambe2450_get_dct_cache(void) {
+static struct ambe2450_dct_cache *ambe2450_get_dct_cache(void)
+{
     if (ambe2450_cache.inited) {
         return &ambe2450_cache;
     }
@@ -56,7 +56,8 @@ ambe2450_get_dct_cache(void) {
     /* Fill Ri DCT cosine table: cosf(M_PI * (m-1) * (i-0.5) / 8) */
     for (int m = 1; m <= 8; m++) {
         for (int i = 1; i <= 8; i++) {
-            ambe2450_cache.ri_cos[m][i] = cosf((M_PI * (float)(m - 1) * ((float)i - 0.5f)) / 8.0f);
+            ambe2450_cache.ri_cos[m][i] =
+                cosf((M_PI * (float)(m - 1) * ((float)i - 0.5f)) / 8.0f);
         }
     }
 
@@ -64,7 +65,8 @@ ambe2450_get_dct_cache(void) {
     for (int ji = 1; ji <= 17; ji++) {
         for (int j = 1; j <= ji; j++) {
             for (int k = 1; k <= ji; k++) {
-                ambe2450_cache.idct_cos[ji][j][k] = cosf((M_PI * (float)(k - 1) * ((float)j - 0.5f)) / (float)ji);
+                ambe2450_cache.idct_cos[ji][j][k] = cosf(
+                    (M_PI * (float)(k - 1) * ((float)j - 0.5f)) / (float)ji);
             }
         }
     }
@@ -77,11 +79,10 @@ ambe2450_get_dct_cache(void) {
  * @brief Print AMBE 2450 parameter bits to stderr (debug aid).
  * @param ambe_d AMBE parameter bits (49).
  */
-void
-mbe_dumpAmbe2450Data(char* ambe_d) {
-
+void mbe_dumpAmbe2450Data(char *ambe_d)
+{
     int i;
-    char* ambe;
+    char *ambe;
 
     ambe = ambe_d;
     for (i = 0; i < 49; i++) {
@@ -95,9 +96,8 @@ mbe_dumpAmbe2450Data(char* ambe_d) {
  * @brief Print raw AMBE 3600x2450 frame bitplanes to stderr.
  * @param ambe_fr Frame as 4x24 bitplanes.
  */
-void
-mbe_dumpAmbe3600x2450Frame(char ambe_fr[4][24]) {
-
+void mbe_dumpAmbe3600x2450Frame(char ambe_fr[4][24])
+{
     int j;
 
     // c0
@@ -131,8 +131,8 @@ mbe_dumpAmbe3600x2450Frame(char ambe_fr[4][24]) {
  * @param ambe_fr Frame as 4x24 bitplanes.
  * @return Number of corrected errors in C0.
  */
-int
-mbe_eccAmbe3600x2450C0(char ambe_fr[4][24]) {
+int mbe_eccAmbe3600x2450C0(char ambe_fr[4][24])
+{
     return mbe_eccAmbe3600C0_common(ambe_fr);
 }
 
@@ -142,8 +142,8 @@ mbe_eccAmbe3600x2450C0(char ambe_fr[4][24]) {
  * @param ambe_d  Output parameter bits (49).
  * @return Number of corrected errors in protected fields.
  */
-int
-mbe_eccAmbe3600x2450Data(char ambe_fr[4][24], char* ambe_d) {
+int mbe_eccAmbe3600x2450Data(char ambe_fr[4][24], char *ambe_d)
+{
     return mbe_eccAmbe3600Data_common(ambe_fr, ambe_d);
 }
 
@@ -154,14 +154,13 @@ mbe_eccAmbe3600x2450Data(char ambe_fr[4][24], char* ambe_d) {
  * @param prev_mp Input: previous frame parameters (for prediction).
  * @return Tone index or 0 for voice; implementation-specific non-zero for tone frames.
  */
-int
-mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
-
+int mbe_decodeAmbe2450Parms(char *ambe_d, mbe_parms *cur_mp, mbe_parms *prev_mp)
+{
     int ji, i, j, k, l, L = 0, L9, m, am, ak;
     int intkl[57];
     int b0, b1, b2, b3, b4, b5, b6, b7, b8;
     float f0, Cik[5][18], flokl[57], deltal[57];
-    float Sum42, Sum43, Tl[57] = {0}, Gm[9], Ri[9], sum, c1, c2;
+    float Sum42, Sum43, Tl[57] = { 0 }, Gm[9], Ri[9], sum, c1, c2;
     int silence;
     int Ji[5], jl;
     float deltaGamma, BigGamma;
@@ -234,7 +233,8 @@ mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
 #endif
         return (2);
     }
-    if ((b0 == 124) || (b0 == 125)) // if w0 bits are 1111100 or 1111101, frame is silence
+    if ((b0 == 124)
+        || (b0 == 125)) // if w0 bits are 1111100 or 1111101, frame is silence
     {
 #ifdef AMBE_DEBUG
         fprintf(stderr, "Silence Frame\n");
@@ -249,7 +249,8 @@ mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
         }
     }
     //the below check doesn't seem to be entirely representative of all tones (could be entirely wrong)
-    if ((b0 == 126) || (b0 == 127)) // if w0 bits are 1111110 or 1111111, frame is tone
+    if ((b0 == 126)
+        || (b0 == 127)) // if w0 bits are 1111110 or 1111111, frame is tone
     {
 #ifdef AMBE_DEBUG
         fprintf(stderr, "Tone Frame 1\n");
@@ -320,7 +321,8 @@ mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
     deltaGamma = AmbeDg[b2];
     cur_mp->gamma = deltaGamma + ((float)0.5 * prev_mp->gamma);
 #ifdef AMBE_DEBUG
-    fprintf(stderr, "b2: %i, deltaGamma: %f gamma: %f gamma-1: %f\n", b2, deltaGamma, cur_mp->gamma, prev_mp->gamma);
+    fprintf(stderr, "b2: %i, deltaGamma: %f gamma: %f gamma-1: %f\n", b2,
+            deltaGamma, cur_mp->gamma, prev_mp->gamma);
 #endif
 
     // decode PRBA vectors
@@ -356,12 +358,14 @@ mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
     Gm[8] = AmbePRBA58[b4][3];
 
 #ifdef AMBE_DEBUG
-    fprintf(stderr, "b3: %i Gm[2]: %f Gm[3]: %f Gm[4]: %f b4: %i Gm[5]: %f Gm[6]: %f Gm[7]: %f Gm[8]: %f\n", b3, Gm[2],
-            Gm[3], Gm[4], b4, Gm[5], Gm[6], Gm[7], Gm[8]);
+    fprintf(
+        stderr,
+        "b3: %i Gm[2]: %f Gm[3]: %f Gm[4]: %f b4: %i Gm[5]: %f Gm[6]: %f Gm[7]: %f Gm[8]: %f\n",
+        b3, Gm[2], Gm[3], Gm[4], b4, Gm[5], Gm[6], Gm[7], Gm[8]);
 #endif
 
     // compute Ri (using cached cosine coefficients)
-    struct ambe2450_dct_cache* cache = ambe2450_get_dct_cache();
+    struct ambe2450_dct_cache *cache = ambe2450_get_dct_cache();
     for (i = 1; i <= 8; i++) {
         sum = 0;
         for (m = 1; m <= 8; m++) {
@@ -428,7 +432,8 @@ mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
     Ji[3] = AmbeLmprbl[L][2];
     Ji[4] = AmbeLmprbl[L][3];
 #ifdef AMBE_DEBUG
-    fprintf(stderr, "Ji[1]: %i Ji[2]: %i Ji[3]: %i Ji[4]: %i\n", Ji[1], Ji[2], Ji[3], Ji[4]);
+    fprintf(stderr, "Ji[1]: %i Ji[2]: %i Ji[3]: %i Ji[4]: %i\n", Ji[1], Ji[2],
+            Ji[3], Ji[4]);
     fprintf(stderr, "b5: %i b6: %i b7: %i b8: %i\n", b5, b6, b7, b8);
 #endif
 
@@ -519,7 +524,6 @@ mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
     // Part 1
     Sum43 = 0;
     for (l = 1; l <= cur_mp->L; l++) {
-
         // eq. 40
         flokl[l] = ((float)prev_mp->L / (float)cur_mp->L) * (float)l;
         intkl[l] = (int)(flokl[l]);
@@ -533,7 +537,8 @@ mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
 #endif
         // eq 43
         Sum43 = Sum43
-                + ((((float)1 - deltal[l]) * prev_mp->log2Ml[intkl[l]]) + (deltal[l] * prev_mp->log2Ml[intkl[l] + 1]));
+              + ((((float)1 - deltal[l]) * prev_mp->log2Ml[intkl[l]])
+                 + (deltal[l] * prev_mp->log2Ml[intkl[l] + 1]));
     }
     Sum43 = (((float)0.65 / (float)cur_mp->L) * Sum43);
 #ifdef AMBE_DEBUG
@@ -562,11 +567,16 @@ mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
             cur_mp->Ml[l] = unvc * exp2f(cur_mp->log2Ml[l]);
         }
 #ifdef AMBE_DEBUG
-        fprintf(stderr, "flokl[%i]: %f, intkl[%i]: %i ", l, flokl[l], l, intkl[l]);
+        fprintf(stderr, "flokl[%i]: %f, intkl[%i]: %i ", l, flokl[l], l,
+                intkl[l]);
         fprintf(stderr, "deltal[%i]: %f ", l, deltal[l]);
-        fprintf(stderr, "prev_mp->log2Ml[%i]: %f\n", l, prev_mp->log2Ml[intkl[l]]);
-        fprintf(stderr, "BigGamma: %f c1: %f c2: %f Sum43: %f Tl[%i]: %f log2Ml[%i]: %f Ml[%i]: %f\n", BigGamma, c1, c2,
-                Sum43, l, Tl[l], l, cur_mp->log2Ml[l], l, cur_mp->Ml[l]);
+        fprintf(stderr, "prev_mp->log2Ml[%i]: %f\n", l,
+                prev_mp->log2Ml[intkl[l]]);
+        fprintf(
+            stderr,
+            "BigGamma: %f c1: %f c2: %f Sum43: %f Tl[%i]: %f log2Ml[%i]: %f Ml[%i]: %f\n",
+            BigGamma, c1, c2, Sum43, l, Tl[l], l, cur_mp->log2Ml[l], l,
+            cur_mp->Ml[l]);
 #endif
     }
 
@@ -577,8 +587,8 @@ mbe_decodeAmbe2450Parms(char* ambe_d, mbe_parms* cur_mp, mbe_parms* prev_mp) {
  * @brief Demodulate interleaved AMBE 3600x2450 data in-place.
  * @param ambe_fr Frame as 4x24 bitplanes (modified).
  */
-void
-mbe_demodulateAmbe3600x2450Data(char ambe_fr[4][24]) {
+void mbe_demodulateAmbe3600x2450Data(char ambe_fr[4][24])
+{
     mbe_demodulateAmbe3600Data_common(ambe_fr);
 }
 
@@ -594,10 +604,11 @@ mbe_demodulateAmbe3600x2450Data(char ambe_fr[4][24]) {
  * @param prev_mp_enhanced In/out: enhanced previous parameters for continuity.
  * @param uvquality Unvoiced synthesis quality (1..64).
  */
-void
-mbe_processAmbe2450Dataf(float* aout_buf, int* errs, int* errs2, char* err_str, char ambe_d[49], mbe_parms* cur_mp,
-                         mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced, int uvquality) {
-
+void mbe_processAmbe2450Dataf(float *aout_buf, int *errs, int *errs2,
+                              char *err_str, char ambe_d[49], mbe_parms *cur_mp,
+                              mbe_parms *prev_mp, mbe_parms *prev_mp_enhanced,
+                              int uvquality)
+{
     int i, bad;
 
     /* Set AMBE-specific muting threshold (9.6% vs IMBE's 8.75%).
@@ -610,7 +621,8 @@ mbe_processAmbe2450Dataf(float* aout_buf, int* errs, int* errs2, char* err_str, 
      * Note: AMBE uses different coefficient (0.001064) than IMBE (0.000365). */
     cur_mp->errorCountTotal = *errs + *errs2;
     cur_mp->errorCount4 = 0; /* AMBE has no Hamming cosets */
-    cur_mp->errorRate = (0.95f * prev_mp->errorRate) + (0.001064f * (float)cur_mp->errorCountTotal);
+    cur_mp->errorRate = (0.95f * prev_mp->errorRate)
+                      + (0.001064f * (float)cur_mp->errorCountTotal);
 
     for (i = 0; i < *errs2; i++) {
         *err_str = '=';
@@ -646,7 +658,8 @@ mbe_processAmbe2450Dataf(float* aout_buf, int* errs, int* errs2, char* err_str, 
         if (cur_mp->repeat <= 3) {
             mbe_moveMbeParms(cur_mp, prev_mp);
             mbe_spectralAmpEnhance(cur_mp);
-            mbe_synthesizeSpeechf(aout_buf, cur_mp, prev_mp_enhanced, uvquality);
+            mbe_synthesizeSpeechf(aout_buf, cur_mp, prev_mp_enhanced,
+                                  uvquality);
             mbe_moveMbeParms(cur_mp, prev_mp_enhanced);
         } else {
             *err_str = 'M';
@@ -656,7 +669,8 @@ mbe_processAmbe2450Dataf(float* aout_buf, int* errs, int* errs2, char* err_str, 
         }
     }
 
-    else if (bad == 7 && *errs < 2 && *errs2 < 3) //only run if no more than x errs accumulated
+    else if (bad == 7 && *errs < 2
+             && *errs2 < 3) //only run if no more than x errs accumulated
     {
         //synthesize tone
         mbe_synthesizeTonef(aout_buf, ambe_d, cur_mp);
@@ -672,12 +686,15 @@ mbe_processAmbe2450Dataf(float* aout_buf, int* errs, int* errs2, char* err_str, 
  * @brief Process AMBE 2450 parameters into 160 16-bit samples at 8 kHz.
  * @see mbe_processAmbe2450Dataf for parameter details.
  */
-void
-mbe_processAmbe2450Data(short* aout_buf, int* errs, int* errs2, char* err_str, char ambe_d[49], mbe_parms* cur_mp,
-                        mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced, int uvquality) {
+void mbe_processAmbe2450Data(short *aout_buf, int *errs, int *errs2,
+                             char *err_str, char ambe_d[49], mbe_parms *cur_mp,
+                             mbe_parms *prev_mp, mbe_parms *prev_mp_enhanced,
+                             int uvquality)
+{
     float float_buf[160];
 
-    mbe_processAmbe2450Dataf(float_buf, errs, errs2, err_str, ambe_d, cur_mp, prev_mp, prev_mp_enhanced, uvquality);
+    mbe_processAmbe2450Dataf(float_buf, errs, errs2, err_str, ambe_d, cur_mp,
+                             prev_mp, prev_mp_enhanced, uvquality);
     mbe_floattoshort(float_buf, aout_buf);
 }
 
@@ -690,11 +707,12 @@ mbe_processAmbe2450Data(short* aout_buf, int* errs, int* errs2, char* err_str, c
  * @param cur_mp,prev_mp,prev_mp_enhanced Parameter state as per Dataf variant.
  * @param uvquality Unvoiced synthesis quality (1..64).
  */
-void
-mbe_processAmbe3600x2450Framef(float* aout_buf, int* errs, int* errs2, char* err_str, char ambe_fr[4][24],
-                               char ambe_d[49], mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced,
-                               int uvquality) {
-
+void mbe_processAmbe3600x2450Framef(float *aout_buf, int *errs, int *errs2,
+                                    char *err_str, char ambe_fr[4][24],
+                                    char ambe_d[49], mbe_parms *cur_mp,
+                                    mbe_parms *prev_mp,
+                                    mbe_parms *prev_mp_enhanced, int uvquality)
+{
     *errs = 0;
     *errs2 = 0;
     *errs = mbe_eccAmbe3600x2450C0(ambe_fr);
@@ -702,20 +720,24 @@ mbe_processAmbe3600x2450Framef(float* aout_buf, int* errs, int* errs2, char* err
     *errs2 = *errs;
     *errs2 += mbe_eccAmbe3600x2450Data(ambe_fr, ambe_d);
 
-    mbe_processAmbe2450Dataf(aout_buf, errs, errs2, err_str, ambe_d, cur_mp, prev_mp, prev_mp_enhanced, uvquality);
+    mbe_processAmbe2450Dataf(aout_buf, errs, errs2, err_str, ambe_d, cur_mp,
+                             prev_mp, prev_mp_enhanced, uvquality);
 }
 
 /**
  * @brief Process a complete AMBE 3600x2450 frame into 16-bit PCM.
  * @see mbe_processAmbe3600x2450Framef for details.
  */
-void
-mbe_processAmbe3600x2450Frame(short* aout_buf, int* errs, int* errs2, char* err_str, char ambe_fr[4][24],
-                              char ambe_d[49], mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced,
-                              int uvquality) {
+void mbe_processAmbe3600x2450Frame(short *aout_buf, int *errs, int *errs2,
+                                   char *err_str, char ambe_fr[4][24],
+                                   char ambe_d[49], mbe_parms *cur_mp,
+                                   mbe_parms *prev_mp,
+                                   mbe_parms *prev_mp_enhanced, int uvquality)
+{
     float float_buf[160];
 
-    mbe_processAmbe3600x2450Framef(float_buf, errs, errs2, err_str, ambe_fr, ambe_d, cur_mp, prev_mp, prev_mp_enhanced,
+    mbe_processAmbe3600x2450Framef(float_buf, errs, errs2, err_str, ambe_fr,
+                                   ambe_d, cur_mp, prev_mp, prev_mp_enhanced,
                                    uvquality);
     mbe_floattoshort(float_buf, aout_buf);
 }

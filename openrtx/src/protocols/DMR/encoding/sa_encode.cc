@@ -19,21 +19,21 @@
  * 02110-1301, USA.
  */
 
-#include "typedef.h"
-#include "globals.h"
-#include "basic_op.h"
-#include "imbe.h"
-#include "tbls.h"
-#include "qnt_sub.h"
-#include "sa_encode.h"
-#include "aux_sub.h"
-#include "dsp_sub.h"
-#include "math_sub.h"
+#include "protocols/DMR/encoding/typedef.h"
+#include "protocols/DMR/encoding/globals.h"
+#include "protocols/DMR/encoding/basic_op.h"
+#include "protocols/DMR/encoding/imbe.h"
+#include "protocols/DMR/encoding/tbls.h"
+#include "protocols/DMR/encoding/qnt_sub.h"
+#include "protocols/DMR/encoding/sa_encode.h"
+#include "protocols/DMR/encoding/aux_sub.h"
+#include "protocols/DMR/encoding/dsp_sub.h"
+#include "protocols/DMR/encoding/math_sub.h"
 
 #include <cstdio>
 #include <cmath>
-#include "encode.h"
-#include "imbe_vocoder_impl.h"
+#include "protocols/DMR/encoding/encode.h"
+#include "protocols/DMR/encoding/imbe_vocoder_impl.h"
 
 
 void imbe_vocoder_impl::sa_encode_init(void)

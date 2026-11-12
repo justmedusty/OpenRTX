@@ -62,22 +62,23 @@ typedef struct f77complex {
 } f77complex;
 
 #ifdef TESTING_FFTPACK
-static real
-c_abs(f77complex* c) {
+static real c_abs(f77complex *c)
+{
     return sqrt(c->r * c->r + c->i * c->i);
 }
 
-static double
-dmax(double a, double b) {
+static double dmax(double a, double b)
+{
     return a < b ? b : a;
 }
 #endif
 
 /* translated by f2c (version 20061008), and slightly edited */
 
-static void
-passfb(integer* nac, integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, real* c2, real* ch,
-       real* ch2, const real* wa, real fsign) {
+static void passfb(integer *nac, integer ido, integer ip, integer l1,
+                   integer idl1, real *cc, real *c1, real *c2, real *ch,
+                   real *ch2, const real *wa, real fsign)
+{
     /* System generated locals */
     integer ch_offset, cc_offset, c1_offset, c2_offset, ch2_offset;
 
@@ -87,10 +88,10 @@ passfb(integer* nac, integer ido, integer ip, integer l1, integer idl1, real* cc
     integer ipp2, idij, idlj, idot, ipph;
 
 #define c1_ref(a_1, a_2, a_3) c1[((a_3) * l1 + (a_2)) * ido + a_1]
-#define c2_ref(a_1, a_2)      c2[(a_2) * idl1 + a_1]
+#define c2_ref(a_1, a_2) c2[(a_2) * idl1 + a_1]
 #define cc_ref(a_1, a_2, a_3) cc[((a_3) * ip + (a_2)) * ido + a_1]
 #define ch_ref(a_1, a_2, a_3) ch[((a_3) * l1 + (a_2)) * ido + a_1]
-#define ch2_ref(a_1, a_2)     ch2[(a_2) * idl1 + a_1]
+#define ch2_ref(a_1, a_2) ch2[(a_2) * idl1 + a_1]
 
     /* Parameter adjustments */
     ch_offset = 1 + ido * (1 + l1);
@@ -202,8 +203,10 @@ passfb(integer* nac, integer ido, integer ip, integer l1, integer idl1, real* cc
             for (i = 4; i <= ido; i += 2) {
                 idij += 2;
                 for (k = 1; k <= l1; ++k) {
-                    c1_ref(i - 1, k, j) = wa[idij - 1] * ch_ref(i - 1, k, j) - fsign * wa[idij] * ch_ref(i, k, j);
-                    c1_ref(i, k, j) = wa[idij - 1] * ch_ref(i, k, j) + fsign * wa[idij] * ch_ref(i - 1, k, j);
+                    c1_ref(i - 1, k, j) = wa[idij - 1] * ch_ref(i - 1, k, j)
+                                        - fsign * wa[idij] * ch_ref(i, k, j);
+                    c1_ref(i, k, j) = wa[idij - 1] * ch_ref(i, k, j)
+                                    + fsign * wa[idij] * ch_ref(i - 1, k, j);
                 }
             }
         }
@@ -216,8 +219,10 @@ passfb(integer* nac, integer ido, integer ip, integer l1, integer idl1, real* cc
             idij = idj;
             for (i = 4; i <= ido; i += 2) {
                 idij += 2;
-                c1_ref(i - 1, k, j) = wa[idij - 1] * ch_ref(i - 1, k, j) - fsign * wa[idij] * ch_ref(i, k, j);
-                c1_ref(i, k, j) = wa[idij - 1] * ch_ref(i, k, j) + fsign * wa[idij] * ch_ref(i - 1, k, j);
+                c1_ref(i - 1, k, j) = wa[idij - 1] * ch_ref(i - 1, k, j)
+                                    - fsign * wa[idij] * ch_ref(i, k, j);
+                c1_ref(i, k, j) = wa[idij - 1] * ch_ref(i, k, j)
+                                + fsign * wa[idij] * ch_ref(i - 1, k, j);
             }
         }
     }
@@ -229,8 +234,9 @@ passfb(integer* nac, integer ido, integer ip, integer l1, integer idl1, real* cc
 #undef c2_ref
 #undef c1_ref
 
-static void
-passb2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
+static void passb2(integer ido, integer l1, const real *cc, real *ch,
+                   const real *wa1)
+{
     /* System generated locals */
     integer cc_offset, ch_offset;
 
@@ -273,8 +279,9 @@ passb2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
 #undef ch_ref
 #undef cc_ref
 
-static void
-passb3(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2) {
+static void passb3(integer ido, integer l1, const real *cc, real *ch,
+                   const real *wa1, const real *wa2)
+{
     static const real taur = -.5;
     static const real taui = .866025403784439;
 
@@ -339,8 +346,9 @@ passb3(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const
 #undef ch_ref
 #undef cc_ref
 
-static void
-passb4(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2, const real* wa3) {
+static void passb4(integer ido, integer l1, const real *cc, real *ch,
+                   const real *wa1, const real *wa2, const real *wa3)
+{
     /* System generated locals */
     integer cc_offset, ch_offset;
 
@@ -414,9 +422,10 @@ passb4(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const
 #undef cc_ref
 
 /* passf5 and passb5 merged */
-static void
-passfb5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2, const real* wa3,
-        const real* wa4, real fsign) {
+static void passfb5(integer ido, integer l1, const real *cc, real *ch,
+                    const real *wa1, const real *wa2, const real *wa3,
+                    const real *wa4, real fsign)
+{
     const real tr11 = .309016994374947;
     const real ti11 = .951056516295154 * fsign;
     const real tr12 = -.809016994374947;
@@ -427,8 +436,8 @@ passfb5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, cons
 
     /* Local variables */
     integer i, k;
-    real ci2, ci3, ci4, ci5, di3, di4, di5, di2, cr2, cr3, cr5, cr4, ti2, ti3, ti4, ti5, dr3, dr4, dr5, dr2, tr2, tr3,
-        tr4, tr5;
+    real ci2, ci3, ci4, ci5, di3, di4, di5, di2, cr2, cr3, cr5, cr4, ti2, ti3,
+        ti4, ti5, dr3, dr4, dr5, dr2, tr2, tr3, tr4, tr5;
 
 #define cc_ref(a_1, a_2, a_3) cc[((a_3) * 5 + (a_2)) * ido + a_1]
 #define ch_ref(a_1, a_2, a_3) ch[((a_3) * l1 + (a_2)) * ido + a_1]
@@ -518,8 +527,9 @@ passfb5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, cons
 #undef ch_ref
 #undef cc_ref
 
-static void
-passf2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
+static void passf2(integer ido, integer l1, const real *cc, real *ch,
+                   const real *wa1)
+{
     /* System generated locals */
     integer cc_offset, ch_offset;
 
@@ -562,8 +572,9 @@ passf2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
 #undef ch_ref
 #undef cc_ref
 
-static void
-passf3(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2) {
+static void passf3(integer ido, integer l1, const real *cc, real *ch,
+                   const real *wa1, const real *wa2)
+{
     static const real taur = -.5;
     static const real taui = -.866025403784439;
 
@@ -628,8 +639,9 @@ passf3(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const
 #undef ch_ref
 #undef cc_ref
 
-static void
-passf4(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2, const real* wa3) {
+static void passf4(integer ido, integer l1, const real *cc, real *ch,
+                   const real *wa1, const real *wa2, const real *wa3)
+{
     /* System generated locals */
     integer cc_offset, ch_offset;
 
@@ -702,8 +714,9 @@ passf4(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const
 #undef ch_ref
 #undef cc_ref
 
-static void
-radb2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
+static void radb2(integer ido, integer l1, const real *cc, real *ch,
+                  const real *wa1)
+{
     /* System generated locals */
     integer cc_offset, ch_offset;
 
@@ -734,7 +747,8 @@ radb2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
         for (k = 1; k <= l1; ++k) {
             for (i = 3; i <= ido; i += 2) {
                 ic = idp2 - i;
-                ch_ref(i - 1, k, 1) = cc_ref(i - 1, 1, k) + cc_ref(ic - 1, 2, k);
+                ch_ref(i - 1, k, 1) = cc_ref(i - 1, 1, k)
+                                    + cc_ref(ic - 1, 2, k);
                 tr2 = cc_ref(i - 1, 1, k) - cc_ref(ic - 1, 2, k);
                 ch_ref(i, k, 1) = cc_ref(i, 1, k) - cc_ref(ic, 2, k);
                 ti2 = cc_ref(i, 1, k) + cc_ref(ic, 2, k);
@@ -755,8 +769,9 @@ radb2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
 #undef ch_ref
 #undef cc_ref
 
-static void
-radb3(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2) {
+static void radb3(integer ido, integer l1, const real *cc, real *ch,
+                  const real *wa1, const real *wa2)
+{
     /* Initialized data */
 
     static const real taur = -.5;
@@ -820,8 +835,9 @@ radb3(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
 #undef ch_ref
 #undef cc_ref
 
-static void
-radb4(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2, const real* wa3) {
+static void radb4(integer ido, integer l1, const real *cc, real *ch,
+                  const real *wa1, const real *wa2, const real *wa3)
+{
     /* Initialized data */
 
     static const real sqrt2 = 1.414213562373095;
@@ -908,9 +924,10 @@ radb4(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
 #undef ch_ref
 #undef cc_ref
 
-static void
-radb5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2, const real* wa3,
-      const real* wa4) {
+static void radb5(integer ido, integer l1, const real *cc, real *ch,
+                  const real *wa1, const real *wa2, const real *wa3,
+                  const real *wa4)
+{
     /* Initialized data */
 
     static const real tr11 = .309016994374947;
@@ -923,8 +940,8 @@ radb5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
 
     /* Local variables */
     integer i, k, ic;
-    real ci2, ci3, ci4, ci5, di3, di4, di5, di2, cr2, cr3, cr5, cr4, ti2, ti3, ti4, ti5, dr3, dr4, dr5, dr2, tr2, tr3,
-        tr4, tr5;
+    real ci2, ci3, ci4, ci5, di3, di4, di5, di2, cr2, cr3, cr5, cr4, ti2, ti3,
+        ti4, ti5, dr3, dr4, dr5, dr2, tr2, tr3, tr4, tr5;
     integer idp2;
 
 #define cc_ref(a_1, a_2, a_3) cc[((a_3) * 5 + (a_2)) * ido + a_1]
@@ -1004,9 +1021,10 @@ radb5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
 #undef ch_ref
 #undef cc_ref
 
-static void
-radbg(integer ido, integer ip, integer l1, integer idl1, const real* cc, real* c1, real* c2, real* ch, real* ch2,
-      const real* wa) {
+static void radbg(integer ido, integer ip, integer l1, integer idl1,
+                  const real *cc, real *c1, real *c2, real *ch, real *ch2,
+                  const real *wa)
+{
     /* System generated locals */
     integer ch_offset, cc_offset, c1_offset, c2_offset, ch2_offset;
 
@@ -1018,10 +1036,10 @@ radbg(integer ido, integer ip, integer l1, integer idl1, const real* cc, real* c
     integer idp2, ipp2, idij, ipph;
 
 #define c1_ref(a_1, a_2, a_3) c1[((a_3) * l1 + (a_2)) * ido + a_1]
-#define c2_ref(a_1, a_2)      c2[(a_2) * idl1 + a_1]
+#define c2_ref(a_1, a_2) c2[(a_2) * idl1 + a_1]
 #define cc_ref(a_1, a_2, a_3) cc[((a_3) * ip + (a_2)) * ido + a_1]
 #define ch_ref(a_1, a_2, a_3) ch[((a_3) * l1 + (a_2)) * ido + a_1]
-#define ch2_ref(a_1, a_2)     ch2[(a_2) * idl1 + a_1]
+#define ch2_ref(a_1, a_2) ch2[(a_2) * idl1 + a_1]
 
     /* Parameter adjustments */
     ch_offset = 1 + ido * (1 + l1);
@@ -1072,10 +1090,14 @@ radbg(integer ido, integer ip, integer l1, integer idl1, const real* cc, real* c
                 for (k = 1; k <= l1; ++k) {
                     for (i = 3; i <= ido; i += 2) {
                         ic = idp2 - i;
-                        ch_ref(i - 1, k, j) = cc_ref(i - 1, (j << 1) - 1, k) + cc_ref(ic - 1, (j << 1) - 2, k);
-                        ch_ref(i - 1, k, jc) = cc_ref(i - 1, (j << 1) - 1, k) - cc_ref(ic - 1, (j << 1) - 2, k);
-                        ch_ref(i, k, j) = cc_ref(i, (j << 1) - 1, k) - cc_ref(ic, (j << 1) - 2, k);
-                        ch_ref(i, k, jc) = cc_ref(i, (j << 1) - 1, k) + cc_ref(ic, (j << 1) - 2, k);
+                        ch_ref(i - 1, k, j) = cc_ref(i - 1, (j << 1) - 1, k)
+                                            + cc_ref(ic - 1, (j << 1) - 2, k);
+                        ch_ref(i - 1, k, jc) = cc_ref(i - 1, (j << 1) - 1, k)
+                                             - cc_ref(ic - 1, (j << 1) - 2, k);
+                        ch_ref(i, k, j) = cc_ref(i, (j << 1) - 1, k)
+                                        - cc_ref(ic, (j << 1) - 2, k);
+                        ch_ref(i, k, jc) = cc_ref(i, (j << 1) - 1, k)
+                                         + cc_ref(ic, (j << 1) - 2, k);
                     }
                 }
             }
@@ -1085,10 +1107,14 @@ radbg(integer ido, integer ip, integer l1, integer idl1, const real* cc, real* c
                 for (i = 3; i <= ido; i += 2) {
                     ic = idp2 - i;
                     for (k = 1; k <= l1; ++k) {
-                        ch_ref(i - 1, k, j) = cc_ref(i - 1, (j << 1) - 1, k) + cc_ref(ic - 1, (j << 1) - 2, k);
-                        ch_ref(i - 1, k, jc) = cc_ref(i - 1, (j << 1) - 1, k) - cc_ref(ic - 1, (j << 1) - 2, k);
-                        ch_ref(i, k, j) = cc_ref(i, (j << 1) - 1, k) - cc_ref(ic, (j << 1) - 2, k);
-                        ch_ref(i, k, jc) = cc_ref(i, (j << 1) - 1, k) + cc_ref(ic, (j << 1) - 2, k);
+                        ch_ref(i - 1, k, j) = cc_ref(i - 1, (j << 1) - 1, k)
+                                            + cc_ref(ic - 1, (j << 1) - 2, k);
+                        ch_ref(i - 1, k, jc) = cc_ref(i - 1, (j << 1) - 1, k)
+                                             - cc_ref(ic - 1, (j << 1) - 2, k);
+                        ch_ref(i, k, j) = cc_ref(i, (j << 1) - 1, k)
+                                        - cc_ref(ic, (j << 1) - 2, k);
+                        ch_ref(i, k, jc) = cc_ref(i, (j << 1) - 1, k)
+                                         + cc_ref(ic, (j << 1) - 2, k);
                     }
                 }
             }
@@ -1138,10 +1164,14 @@ radbg(integer ido, integer ip, integer l1, integer idl1, const real* cc, real* c
                 jc = ipp2 - j;
                 for (k = 1; k <= l1; ++k) {
                     for (i = 3; i <= ido; i += 2) {
-                        ch_ref(i - 1, k, j) = c1_ref(i - 1, k, j) - c1_ref(i, k, jc);
-                        ch_ref(i - 1, k, jc) = c1_ref(i - 1, k, j) + c1_ref(i, k, jc);
-                        ch_ref(i, k, j) = c1_ref(i, k, j) + c1_ref(i - 1, k, jc);
-                        ch_ref(i, k, jc) = c1_ref(i, k, j) - c1_ref(i - 1, k, jc);
+                        ch_ref(i - 1, k, j) = c1_ref(i - 1, k, j)
+                                            - c1_ref(i, k, jc);
+                        ch_ref(i - 1, k, jc) = c1_ref(i - 1, k, j)
+                                             + c1_ref(i, k, jc);
+                        ch_ref(i, k, j) = c1_ref(i, k, j)
+                                        + c1_ref(i - 1, k, jc);
+                        ch_ref(i, k, jc) = c1_ref(i, k, j)
+                                         - c1_ref(i - 1, k, jc);
                     }
                 }
             }
@@ -1150,10 +1180,14 @@ radbg(integer ido, integer ip, integer l1, integer idl1, const real* cc, real* c
                 jc = ipp2 - j;
                 for (i = 3; i <= ido; i += 2) {
                     for (k = 1; k <= l1; ++k) {
-                        ch_ref(i - 1, k, j) = c1_ref(i - 1, k, j) - c1_ref(i, k, jc);
-                        ch_ref(i - 1, k, jc) = c1_ref(i - 1, k, j) + c1_ref(i, k, jc);
-                        ch_ref(i, k, j) = c1_ref(i, k, j) + c1_ref(i - 1, k, jc);
-                        ch_ref(i, k, jc) = c1_ref(i, k, j) - c1_ref(i - 1, k, jc);
+                        ch_ref(i - 1, k, j) = c1_ref(i - 1, k, j)
+                                            - c1_ref(i, k, jc);
+                        ch_ref(i - 1, k, jc) = c1_ref(i - 1, k, j)
+                                             + c1_ref(i, k, jc);
+                        ch_ref(i, k, j) = c1_ref(i, k, j)
+                                        + c1_ref(i - 1, k, jc);
+                        ch_ref(i, k, jc) = c1_ref(i, k, j)
+                                         - c1_ref(i - 1, k, jc);
                     }
                 }
             }
@@ -1178,8 +1212,10 @@ radbg(integer ido, integer ip, integer l1, integer idl1, const real* cc, real* c
             for (i = 3; i <= ido; i += 2) {
                 idij += 2;
                 for (k = 1; k <= l1; ++k) {
-                    c1_ref(i - 1, k, j) = wa[idij - 1] * ch_ref(i - 1, k, j) - wa[idij] * ch_ref(i, k, j);
-                    c1_ref(i, k, j) = wa[idij - 1] * ch_ref(i, k, j) + wa[idij] * ch_ref(i - 1, k, j);
+                    c1_ref(i - 1, k, j) = wa[idij - 1] * ch_ref(i - 1, k, j)
+                                        - wa[idij] * ch_ref(i, k, j);
+                    c1_ref(i, k, j) = wa[idij - 1] * ch_ref(i, k, j)
+                                    + wa[idij] * ch_ref(i - 1, k, j);
                 }
             }
         }
@@ -1191,8 +1227,10 @@ radbg(integer ido, integer ip, integer l1, integer idl1, const real* cc, real* c
                 idij = is;
                 for (i = 3; i <= ido; i += 2) {
                     idij += 2;
-                    c1_ref(i - 1, k, j) = wa[idij - 1] * ch_ref(i - 1, k, j) - wa[idij] * ch_ref(i, k, j);
-                    c1_ref(i, k, j) = wa[idij - 1] * ch_ref(i, k, j) + wa[idij] * ch_ref(i - 1, k, j);
+                    c1_ref(i - 1, k, j) = wa[idij - 1] * ch_ref(i - 1, k, j)
+                                        - wa[idij] * ch_ref(i, k, j);
+                    c1_ref(i, k, j) = wa[idij - 1] * ch_ref(i, k, j)
+                                    + wa[idij] * ch_ref(i - 1, k, j);
                 }
             }
         }
@@ -1205,8 +1243,9 @@ radbg(integer ido, integer ip, integer l1, integer idl1, const real* cc, real* c
 #undef c2_ref
 #undef c1_ref
 
-static void
-radf2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
+static void radf2(integer ido, integer l1, const real *cc, real *ch,
+                  const real *wa1)
+{
     /* System generated locals */
     integer ch_offset, cc_offset;
 
@@ -1238,8 +1277,10 @@ radf2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
         for (k = 1; k <= l1; ++k) {
             for (i = 3; i <= ido; i += 2) {
                 ic = idp2 - i;
-                tr2 = wa1[i - 2] * cc_ref(i - 1, k, 2) + wa1[i - 1] * cc_ref(i, k, 2);
-                ti2 = wa1[i - 2] * cc_ref(i, k, 2) - wa1[i - 1] * cc_ref(i - 1, k, 2);
+                tr2 = wa1[i - 2] * cc_ref(i - 1, k, 2)
+                    + wa1[i - 1] * cc_ref(i, k, 2);
+                ti2 = wa1[i - 2] * cc_ref(i, k, 2)
+                    - wa1[i - 1] * cc_ref(i - 1, k, 2);
                 ch_ref(i, 1, k) = cc_ref(i, k, 1) + ti2;
                 ch_ref(ic, 2, k) = ti2 - cc_ref(i, k, 1);
                 ch_ref(i - 1, 1, k) = cc_ref(i - 1, k, 1) + tr2;
@@ -1259,8 +1300,9 @@ radf2(integer ido, integer l1, const real* cc, real* ch, const real* wa1) {
 #undef ch_ref
 #undef cc_ref
 
-static void
-radf3(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2) {
+static void radf3(integer ido, integer l1, const real *cc, real *ch,
+                  const real *wa1, const real *wa2)
+{
     static const real taur = -.5;
     static const real taui = .866025403784439;
 
@@ -1297,10 +1339,14 @@ radf3(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
     for (k = 1; k <= l1; ++k) {
         for (i = 3; i <= ido; i += 2) {
             ic = idp2 - i;
-            dr2 = wa1[i - 2] * cc_ref(i - 1, k, 2) + wa1[i - 1] * cc_ref(i, k, 2);
-            di2 = wa1[i - 2] * cc_ref(i, k, 2) - wa1[i - 1] * cc_ref(i - 1, k, 2);
-            dr3 = wa2[i - 2] * cc_ref(i - 1, k, 3) + wa2[i - 1] * cc_ref(i, k, 3);
-            di3 = wa2[i - 2] * cc_ref(i, k, 3) - wa2[i - 1] * cc_ref(i - 1, k, 3);
+            dr2 = wa1[i - 2] * cc_ref(i - 1, k, 2)
+                + wa1[i - 1] * cc_ref(i, k, 2);
+            di2 = wa1[i - 2] * cc_ref(i, k, 2)
+                - wa1[i - 1] * cc_ref(i - 1, k, 2);
+            dr3 = wa2[i - 2] * cc_ref(i - 1, k, 3)
+                + wa2[i - 1] * cc_ref(i, k, 3);
+            di3 = wa2[i - 2] * cc_ref(i, k, 3)
+                - wa2[i - 1] * cc_ref(i - 1, k, 3);
             cr2 = dr2 + dr3;
             ci2 = di2 + di3;
             ch_ref(i - 1, 1, k) = cc_ref(i - 1, k, 1) + cr2;
@@ -1320,8 +1366,9 @@ radf3(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
 #undef ch_ref
 #undef cc_ref
 
-static void
-radf4(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2, const real* wa3) {
+static void radf4(integer ido, integer l1, const real *cc, real *ch,
+                  const real *wa1, const real *wa2, const real *wa3)
+{
     /* Initialized data */
 
     static const real hsqt2 = .7071067811865475;
@@ -1363,12 +1410,18 @@ radf4(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
         for (k = 1; k <= l1; ++k) {
             for (i = 3; i <= ido; i += 2) {
                 ic = idp2 - i;
-                cr2 = wa1[i - 2] * cc_ref(i - 1, k, 2) + wa1[i - 1] * cc_ref(i, k, 2);
-                ci2 = wa1[i - 2] * cc_ref(i, k, 2) - wa1[i - 1] * cc_ref(i - 1, k, 2);
-                cr3 = wa2[i - 2] * cc_ref(i - 1, k, 3) + wa2[i - 1] * cc_ref(i, k, 3);
-                ci3 = wa2[i - 2] * cc_ref(i, k, 3) - wa2[i - 1] * cc_ref(i - 1, k, 3);
-                cr4 = wa3[i - 2] * cc_ref(i - 1, k, 4) + wa3[i - 1] * cc_ref(i, k, 4);
-                ci4 = wa3[i - 2] * cc_ref(i, k, 4) - wa3[i - 1] * cc_ref(i - 1, k, 4);
+                cr2 = wa1[i - 2] * cc_ref(i - 1, k, 2)
+                    + wa1[i - 1] * cc_ref(i, k, 2);
+                ci2 = wa1[i - 2] * cc_ref(i, k, 2)
+                    - wa1[i - 1] * cc_ref(i - 1, k, 2);
+                cr3 = wa2[i - 2] * cc_ref(i - 1, k, 3)
+                    + wa2[i - 1] * cc_ref(i, k, 3);
+                ci3 = wa2[i - 2] * cc_ref(i, k, 3)
+                    - wa2[i - 1] * cc_ref(i - 1, k, 3);
+                cr4 = wa3[i - 2] * cc_ref(i - 1, k, 4)
+                    + wa3[i - 1] * cc_ref(i, k, 4);
+                ci4 = wa3[i - 2] * cc_ref(i, k, 4)
+                    - wa3[i - 1] * cc_ref(i - 1, k, 4);
                 tr1 = cr2 + cr4;
                 tr4 = cr4 - cr2;
                 ti1 = ci2 + ci4;
@@ -1404,9 +1457,10 @@ radf4(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
 #undef ch_ref
 #undef cc_ref
 
-static void
-radf5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const real* wa2, const real* wa3,
-      const real* wa4) {
+static void radf5(integer ido, integer l1, const real *cc, real *ch,
+                  const real *wa1, const real *wa2, const real *wa3,
+                  const real *wa4)
+{
     /* Initialized data */
 
     static const real tr11 = .309016994374947;
@@ -1419,8 +1473,8 @@ radf5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
 
     /* Local variables */
     integer i, k, ic;
-    real ci2, di2, ci4, ci5, di3, di4, di5, ci3, cr2, cr3, dr2, dr3, dr4, dr5, cr5, cr4, ti2, ti3, ti5, ti4, tr2, tr3,
-        tr4, tr5;
+    real ci2, di2, ci4, ci5, di3, di4, di5, ci3, cr2, cr3, dr2, dr3, dr4, dr5,
+        cr5, cr4, ti2, ti3, ti5, ti4, tr2, tr3, tr4, tr5;
     integer idp2;
 
 #define cc_ref(a_1, a_2, a_3) cc[((a_3) * l1 + (a_2)) * ido + a_1]
@@ -1455,14 +1509,22 @@ radf5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
     for (k = 1; k <= l1; ++k) {
         for (i = 3; i <= ido; i += 2) {
             ic = idp2 - i;
-            dr2 = wa1[i - 2] * cc_ref(i - 1, k, 2) + wa1[i - 1] * cc_ref(i, k, 2);
-            di2 = wa1[i - 2] * cc_ref(i, k, 2) - wa1[i - 1] * cc_ref(i - 1, k, 2);
-            dr3 = wa2[i - 2] * cc_ref(i - 1, k, 3) + wa2[i - 1] * cc_ref(i, k, 3);
-            di3 = wa2[i - 2] * cc_ref(i, k, 3) - wa2[i - 1] * cc_ref(i - 1, k, 3);
-            dr4 = wa3[i - 2] * cc_ref(i - 1, k, 4) + wa3[i - 1] * cc_ref(i, k, 4);
-            di4 = wa3[i - 2] * cc_ref(i, k, 4) - wa3[i - 1] * cc_ref(i - 1, k, 4);
-            dr5 = wa4[i - 2] * cc_ref(i - 1, k, 5) + wa4[i - 1] * cc_ref(i, k, 5);
-            di5 = wa4[i - 2] * cc_ref(i, k, 5) - wa4[i - 1] * cc_ref(i - 1, k, 5);
+            dr2 = wa1[i - 2] * cc_ref(i - 1, k, 2)
+                + wa1[i - 1] * cc_ref(i, k, 2);
+            di2 = wa1[i - 2] * cc_ref(i, k, 2)
+                - wa1[i - 1] * cc_ref(i - 1, k, 2);
+            dr3 = wa2[i - 2] * cc_ref(i - 1, k, 3)
+                + wa2[i - 1] * cc_ref(i, k, 3);
+            di3 = wa2[i - 2] * cc_ref(i, k, 3)
+                - wa2[i - 1] * cc_ref(i - 1, k, 3);
+            dr4 = wa3[i - 2] * cc_ref(i - 1, k, 4)
+                + wa3[i - 1] * cc_ref(i, k, 4);
+            di4 = wa3[i - 2] * cc_ref(i, k, 4)
+                - wa3[i - 1] * cc_ref(i - 1, k, 4);
+            dr5 = wa4[i - 2] * cc_ref(i - 1, k, 5)
+                + wa4[i - 1] * cc_ref(i, k, 5);
+            di5 = wa4[i - 2] * cc_ref(i, k, 5)
+                - wa4[i - 1] * cc_ref(i - 1, k, 5);
             cr2 = dr2 + dr5;
             ci5 = dr5 - dr2;
             cr5 = di2 - di5;
@@ -1496,9 +1558,9 @@ radf5(integer ido, integer l1, const real* cc, real* ch, const real* wa1, const 
 #undef ch_ref
 #undef cc_ref
 
-static void
-radfg(integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, real* c2, real* ch, real* ch2,
-      const real* wa) {
+static void radfg(integer ido, integer ip, integer l1, integer idl1, real *cc,
+                  real *c1, real *c2, real *ch, real *ch2, const real *wa)
+{
     /* System generated locals */
     integer ch_offset, cc_offset, c1_offset, c2_offset, ch2_offset;
 
@@ -1510,10 +1572,10 @@ radfg(integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, rea
     integer idp2, ipp2, idij, ipph;
 
 #define c1_ref(a_1, a_2, a_3) c1[((a_3) * l1 + (a_2)) * ido + a_1]
-#define c2_ref(a_1, a_2)      c2[(a_2) * idl1 + a_1]
+#define c2_ref(a_1, a_2) c2[(a_2) * idl1 + a_1]
 #define cc_ref(a_1, a_2, a_3) cc[((a_3) * ip + (a_2)) * ido + a_1]
 #define ch_ref(a_1, a_2, a_3) ch[((a_3) * l1 + (a_2)) * ido + a_1]
-#define ch2_ref(a_1, a_2)     ch2[(a_2) * idl1 + a_1]
+#define ch2_ref(a_1, a_2) ch2[(a_2) * idl1 + a_1]
 
     /* Parameter adjustments */
     ch_offset = 1 + ido * (1 + l1);
@@ -1557,8 +1619,10 @@ radfg(integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, rea
                 for (i = 3; i <= ido; i += 2) {
                     idij += 2;
                     for (k = 1; k <= l1; ++k) {
-                        ch_ref(i - 1, k, j) = wa[idij - 1] * c1_ref(i - 1, k, j) + wa[idij] * c1_ref(i, k, j);
-                        ch_ref(i, k, j) = wa[idij - 1] * c1_ref(i, k, j) - wa[idij] * c1_ref(i - 1, k, j);
+                        ch_ref(i - 1, k, j) = wa[idij - 1] * c1_ref(i - 1, k, j)
+                                            + wa[idij] * c1_ref(i, k, j);
+                        ch_ref(i, k, j) = wa[idij - 1] * c1_ref(i, k, j)
+                                        - wa[idij] * c1_ref(i - 1, k, j);
                     }
                 }
             }
@@ -1570,8 +1634,10 @@ radfg(integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, rea
                     idij = is;
                     for (i = 3; i <= ido; i += 2) {
                         idij += 2;
-                        ch_ref(i - 1, k, j) = wa[idij - 1] * c1_ref(i - 1, k, j) + wa[idij] * c1_ref(i, k, j);
-                        ch_ref(i, k, j) = wa[idij - 1] * c1_ref(i, k, j) - wa[idij] * c1_ref(i - 1, k, j);
+                        ch_ref(i - 1, k, j) = wa[idij - 1] * c1_ref(i - 1, k, j)
+                                            + wa[idij] * c1_ref(i, k, j);
+                        ch_ref(i, k, j) = wa[idij - 1] * c1_ref(i, k, j)
+                                        - wa[idij] * c1_ref(i - 1, k, j);
                     }
                 }
             }
@@ -1581,10 +1647,13 @@ radfg(integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, rea
                 jc = ipp2 - j;
                 for (k = 1; k <= l1; ++k) {
                     for (i = 3; i <= ido; i += 2) {
-                        c1_ref(i - 1, k, j) = ch_ref(i - 1, k, j) + ch_ref(i - 1, k, jc);
-                        c1_ref(i - 1, k, jc) = ch_ref(i, k, j) - ch_ref(i, k, jc);
+                        c1_ref(i - 1, k, j) = ch_ref(i - 1, k, j)
+                                            + ch_ref(i - 1, k, jc);
+                        c1_ref(i - 1, k, jc) = ch_ref(i, k, j)
+                                             - ch_ref(i, k, jc);
                         c1_ref(i, k, j) = ch_ref(i, k, j) + ch_ref(i, k, jc);
-                        c1_ref(i, k, jc) = ch_ref(i - 1, k, jc) - ch_ref(i - 1, k, j);
+                        c1_ref(i, k, jc) = ch_ref(i - 1, k, jc)
+                                         - ch_ref(i - 1, k, j);
                     }
                 }
             }
@@ -1593,10 +1662,13 @@ radfg(integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, rea
                 jc = ipp2 - j;
                 for (i = 3; i <= ido; i += 2) {
                     for (k = 1; k <= l1; ++k) {
-                        c1_ref(i - 1, k, j) = ch_ref(i - 1, k, j) + ch_ref(i - 1, k, jc);
-                        c1_ref(i - 1, k, jc) = ch_ref(i, k, j) - ch_ref(i, k, jc);
+                        c1_ref(i - 1, k, j) = ch_ref(i - 1, k, j)
+                                            + ch_ref(i - 1, k, jc);
+                        c1_ref(i - 1, k, jc) = ch_ref(i, k, j)
+                                             - ch_ref(i, k, jc);
                         c1_ref(i, k, j) = ch_ref(i, k, j) + ch_ref(i, k, jc);
-                        c1_ref(i, k, jc) = ch_ref(i - 1, k, jc) - ch_ref(i - 1, k, j);
+                        c1_ref(i, k, jc) = ch_ref(i - 1, k, jc)
+                                         - ch_ref(i - 1, k, j);
                     }
                 }
             }
@@ -1673,8 +1745,10 @@ radfg(integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, rea
             for (k = 1; k <= l1; ++k) {
                 for (i = 3; i <= ido; i += 2) {
                     ic = idp2 - i;
-                    cc_ref(i - 1, j2 - 1, k) = ch_ref(i - 1, k, j) + ch_ref(i - 1, k, jc);
-                    cc_ref(ic - 1, j2 - 2, k) = ch_ref(i - 1, k, j) - ch_ref(i - 1, k, jc);
+                    cc_ref(i - 1, j2 - 1, k) = ch_ref(i - 1, k, j)
+                                             + ch_ref(i - 1, k, jc);
+                    cc_ref(ic - 1, j2 - 2, k) = ch_ref(i - 1, k, j)
+                                              - ch_ref(i - 1, k, jc);
                     cc_ref(i, j2 - 1, k) = ch_ref(i, k, j) + ch_ref(i, k, jc);
                     cc_ref(ic, j2 - 2, k) = ch_ref(i, k, jc) - ch_ref(i, k, j);
                 }
@@ -1687,8 +1761,10 @@ radfg(integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, rea
             for (i = 3; i <= ido; i += 2) {
                 ic = idp2 - i;
                 for (k = 1; k <= l1; ++k) {
-                    cc_ref(i - 1, j2 - 1, k) = ch_ref(i - 1, k, j) + ch_ref(i - 1, k, jc);
-                    cc_ref(ic - 1, j2 - 2, k) = ch_ref(i - 1, k, j) - ch_ref(i - 1, k, jc);
+                    cc_ref(i - 1, j2 - 1, k) = ch_ref(i - 1, k, j)
+                                             + ch_ref(i - 1, k, jc);
+                    cc_ref(ic - 1, j2 - 2, k) = ch_ref(i - 1, k, j)
+                                              - ch_ref(i - 1, k, jc);
                     cc_ref(i, j2 - 1, k) = ch_ref(i, k, j) + ch_ref(i, k, jc);
                     cc_ref(ic, j2 - 2, k) = ch_ref(i, k, jc) - ch_ref(i, k, j);
                 }
@@ -1703,8 +1779,8 @@ radfg(integer ido, integer ip, integer l1, integer idl1, real* cc, real* c1, rea
 #undef c2_ref
 #undef c1_ref
 
-static void
-cfftb1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
+static void cfftb1(integer n, real *c, real *ch, const real *wa, integer *ifac)
+{
     integer i, k1, l1, l2, na, nf, ip, iw, ix2, ix3, ix4, nac, ido, idl1, idot;
 
     /* Function Body */
@@ -1722,7 +1798,8 @@ cfftb1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
             case 4:
                 ix2 = iw + idot;
                 ix3 = ix2 + idot;
-                passb4(idot, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2], &wa[ix3]);
+                passb4(idot, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2],
+                       &wa[ix3]);
                 na = 1 - na;
                 break;
             case 2:
@@ -1738,14 +1815,17 @@ cfftb1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
                 ix2 = iw + idot;
                 ix3 = ix2 + idot;
                 ix4 = ix3 + idot;
-                passfb5(idot, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2], &wa[ix3], &wa[ix4], +1);
+                passfb5(idot, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2],
+                        &wa[ix3], &wa[ix4], +1);
                 na = 1 - na;
                 break;
             default:
                 if (na == 0) {
-                    passfb(&nac, idot, ip, l1, idl1, c, c, c, ch, ch, &wa[iw], +1);
+                    passfb(&nac, idot, ip, l1, idl1, c, c, c, ch, ch, &wa[iw],
+                           +1);
                 } else {
-                    passfb(&nac, idot, ip, l1, idl1, ch, ch, ch, c, c, &wa[iw], +1);
+                    passfb(&nac, idot, ip, l1, idl1, ch, ch, ch, c, c, &wa[iw],
+                           +1);
                 }
                 if (nac != 0) {
                     na = 1 - na;
@@ -1763,8 +1843,8 @@ cfftb1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
     }
 } /* cfftb1 */
 
-void
-cfftb(integer n, real* c, real* wsave) {
+void cfftb(integer n, real *c, real *wsave)
+{
     integer iw1, iw2;
 
     /* Parameter adjustments */
@@ -1777,11 +1857,11 @@ cfftb(integer n, real* c, real* wsave) {
     }
     iw1 = 2 * n + 1;
     iw2 = iw1 + 2 * n;
-    cfftb1(n, &c[1], &wsave[1], &wsave[iw1], (int*)&wsave[iw2]);
+    cfftb1(n, &c[1], &wsave[1], &wsave[iw1], (int *)&wsave[iw2]);
 } /* cfftb */
 
-static void
-cfftf1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
+static void cfftf1(integer n, real *c, real *ch, const real *wa, integer *ifac)
+{
     /* Local variables */
     integer i, k1, l1, l2, na, nf, ip, iw, ix2, ix3, ix4, nac, ido, idl1, idot;
 
@@ -1800,7 +1880,8 @@ cfftf1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
             case 4:
                 ix2 = iw + idot;
                 ix3 = ix2 + idot;
-                passf4(idot, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2], &wa[ix3]);
+                passf4(idot, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2],
+                       &wa[ix3]);
                 na = 1 - na;
                 break;
             case 2:
@@ -1816,14 +1897,17 @@ cfftf1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
                 ix2 = iw + idot;
                 ix3 = ix2 + idot;
                 ix4 = ix3 + idot;
-                passfb5(idot, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2], &wa[ix3], &wa[ix4], -1);
+                passfb5(idot, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2],
+                        &wa[ix3], &wa[ix4], -1);
                 na = 1 - na;
                 break;
             default:
                 if (na == 0) {
-                    passfb(&nac, idot, ip, l1, idl1, c, c, c, ch, ch, &wa[iw], -1);
+                    passfb(&nac, idot, ip, l1, idl1, c, c, c, ch, ch, &wa[iw],
+                           -1);
                 } else {
-                    passfb(&nac, idot, ip, l1, idl1, ch, ch, ch, c, c, &wa[iw], -1);
+                    passfb(&nac, idot, ip, l1, idl1, ch, ch, ch, c, c, &wa[iw],
+                           -1);
                 }
                 if (nac != 0) {
                     na = 1 - na;
@@ -1841,8 +1925,8 @@ cfftf1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
     }
 } /* cfftf1 */
 
-void
-cfftf(integer n, real* c, real* wsave) {
+void cfftf(integer n, real *c, real *wsave)
+{
     integer iw1, iw2;
 
     /* Parameter adjustments */
@@ -1855,11 +1939,11 @@ cfftf(integer n, real* c, real* wsave) {
     }
     iw1 = 2 * n + 1;
     iw2 = iw1 + 2 * n;
-    cfftf1(n, &c[1], &wsave[1], &wsave[iw1], (int*)&wsave[iw2]);
+    cfftf1(n, &c[1], &wsave[1], &wsave[iw1], (int *)&wsave[iw2]);
 } /* cfftf */
 
-static int
-decompose(integer n, integer* ifac, integer ntryh[4]) {
+static int decompose(integer n, integer *ifac, integer ntryh[4])
+{
     integer ntry = 0, nl = n, nf = 0, nq, nr, i, j = 0;
     do {
         if (j < 4) {
@@ -1868,7 +1952,7 @@ decompose(integer n, integer* ifac, integer ntryh[4]) {
             ntry += 2;
         }
         ++j;
-    L104:
+L104:
         nq = nl / ntry;
         nr = nl - ntry * nq;
         if (nr != 0) {
@@ -1893,9 +1977,9 @@ decompose(integer n, integer* ifac, integer ntryh[4]) {
     return nf;
 }
 
-static void
-cffti1(integer n, real* wa, integer* ifac) {
-    static integer ntryh[4] = {3, 4, 2, 5};
+static void cffti1(integer n, real *wa, integer *ifac)
+{
+    static integer ntryh[4] = { 3, 4, 2, 5 };
 
     /* Local variables */
     integer i, j, i1, k1, l1, l2;
@@ -1946,8 +2030,8 @@ cffti1(integer n, real* wa, integer* ifac) {
     }
 } /* cffti1 */
 
-void
-cffti(integer n, real* wsave) {
+void cffti(integer n, real *wsave)
+{
     integer iw1, iw2;
     /* Parameter adjustments */
     --wsave;
@@ -1958,12 +2042,12 @@ cffti(integer n, real* wsave) {
     }
     iw1 = 2 * n + 1;
     iw2 = iw1 + 2 * n;
-    cffti1(n, &wsave[iw1], (int*)&wsave[iw2]);
+    cffti1(n, &wsave[iw1], (int *)&wsave[iw2]);
     return;
 } /* cffti */
 
-static void
-rfftb1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
+static void rfftb1(integer n, real *c, real *ch, const real *wa, integer *ifac)
+{
     /* Local variables */
     integer i, k1, l1, l2, na, nf, ip, iw, ix2, ix3, ix4, ido, idl1;
 
@@ -1981,7 +2065,8 @@ rfftb1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
             case 4:
                 ix2 = iw + ido;
                 ix3 = ix2 + ido;
-                radb4(ido, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2], &wa[ix3]);
+                radb4(ido, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2],
+                      &wa[ix3]);
                 na = 1 - na;
                 break;
             case 2:
@@ -1997,7 +2082,8 @@ rfftb1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
                 ix2 = iw + ido;
                 ix3 = ix2 + ido;
                 ix4 = ix3 + ido;
-                radb5(ido, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2], &wa[ix3], &wa[ix4]);
+                radb5(ido, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2],
+                      &wa[ix3], &wa[ix4]);
                 na = 1 - na;
                 break;
             default:
@@ -2022,8 +2108,8 @@ rfftb1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
     }
 } /* rfftb1 */
 
-static void
-rfftf1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
+static void rfftf1(integer n, real *c, real *ch, const real *wa, integer *ifac)
+{
     /* Local variables */
     integer i, k1, l1, l2, na, kh, nf, ip, iw, ix2, ix3, ix4, ido, idl1;
 
@@ -2044,9 +2130,12 @@ rfftf1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
             case 4:
                 ix2 = iw + ido;
                 ix3 = ix2 + ido;
-                radf4(ido, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2], &wa[ix3]);
+                radf4(ido, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2],
+                      &wa[ix3]);
                 break;
-            case 2: radf2(ido, l1, na ? ch : c, na ? c : ch, &wa[iw]); break;
+            case 2:
+                radf2(ido, l1, na ? ch : c, na ? c : ch, &wa[iw]);
+                break;
             case 3:
                 ix2 = iw + ido;
                 radf3(ido, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2]);
@@ -2055,7 +2144,8 @@ rfftf1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
                 ix2 = iw + ido;
                 ix3 = ix2 + ido;
                 ix4 = ix3 + ido;
-                radf5(ido, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2], &wa[ix3], &wa[ix4]);
+                radf5(ido, l1, na ? ch : c, na ? c : ch, &wa[iw], &wa[ix2],
+                      &wa[ix3], &wa[ix4]);
                 break;
             default:
                 if (ido == 1) {
@@ -2080,9 +2170,8 @@ rfftf1(integer n, real* c, real* ch, const real* wa, integer* ifac) {
     }
 }
 
-void
-rfftb(integer n, real* r, real* wsave) {
-
+void rfftb(integer n, real *r, real *wsave)
+{
     /* Parameter adjustments */
     --wsave;
     --r;
@@ -2091,12 +2180,12 @@ rfftb(integer n, real* r, real* wsave) {
     if (n == 1) {
         return;
     }
-    rfftb1(n, &r[1], &wsave[1], &wsave[n + 1], (int*)&wsave[(n << 1) + 1]);
+    rfftb1(n, &r[1], &wsave[1], &wsave[n + 1], (int *)&wsave[(n << 1) + 1]);
 } /* rfftb */
 
-static void
-rffti1(integer n, real* wa, integer* ifac) {
-    static integer ntryh[4] = {4, 2, 3, 5};
+static void rffti1(integer n, real *wa, integer *ifac)
+{
+    static integer ntryh[4] = { 4, 2, 3, 5 };
 
     /* Local variables */
     integer i, j, k1, l1, l2;
@@ -2145,9 +2234,8 @@ rffti1(integer n, real* wa, integer* ifac) {
     }
 } /* rffti1 */
 
-void
-rfftf(integer n, real* r, real* wsave) {
-
+void rfftf(integer n, real *r, real *wsave)
+{
     /* Parameter adjustments */
     --wsave;
     --r;
@@ -2156,11 +2244,11 @@ rfftf(integer n, real* r, real* wsave) {
     if (n == 1) {
         return;
     }
-    rfftf1(n, &r[1], &wsave[1], &wsave[n + 1], (int*)&wsave[(n << 1) + 1]);
+    rfftf1(n, &r[1], &wsave[1], &wsave[n + 1], (int *)&wsave[(n << 1) + 1]);
 } /* rfftf */
 
-void
-rffti(integer n, real* wsave) {
+void rffti(integer n, real *wsave)
+{
     /* Parameter adjustments */
     --wsave;
 
@@ -2168,12 +2256,12 @@ rffti(integer n, real* wsave) {
     if (n == 1) {
         return;
     }
-    rffti1(n, &wsave[n + 1], (int*)&wsave[(n << 1) + 1]);
+    rffti1(n, &wsave[n + 1], (int *)&wsave[(n << 1) + 1]);
     return;
 } /* rffti */
 
-static void
-cosqb1(integer n, real* x, real* w, real* xh) {
+static void cosqb1(integer n, real *x, real *w, real *xh)
+{
     /* Local variables */
     integer i, k, kc, np2, ns2;
     real xim1;
@@ -2214,8 +2302,8 @@ cosqb1(integer n, real* x, real* w, real* xh) {
     x[1] += x[1];
 } /* cosqb1 */
 
-void
-cosqb(integer n, real* x, real* wsave) {
+void cosqb(integer n, real *x, real *wsave)
+{
     static const real tsqrt2 = 2.82842712474619;
 
     /* Local variables */
@@ -2236,8 +2324,8 @@ cosqb(integer n, real* x, real* wsave) {
     }
 } /* cosqb */
 
-static void
-cosqf1(integer n, real* x, real* w, real* xh) {
+static void cosqf1(integer n, real *x, real *w, real *xh)
+{
     /* Local variables */
     integer i, k, kc, np2, ns2;
     real xim1;
@@ -2276,8 +2364,8 @@ cosqf1(integer n, real* x, real* w, real* xh) {
     }
 } /* cosqf1 */
 
-void
-cosqf(integer n, real* x, real* wsave) {
+void cosqf(integer n, real *x, real *wsave)
+{
     static const real sqrt2 = 1.4142135623731;
 
     /* Local variables */
@@ -2296,8 +2384,8 @@ cosqf(integer n, real* x, real* wsave) {
     }
 } /* cosqf */
 
-void
-cosqi(integer n, real* wsave) {
+void cosqi(integer n, real *wsave)
+{
     /* Local variables */
     integer k;
     real fk, dt;
@@ -2314,8 +2402,8 @@ cosqi(integer n, real* wsave) {
     rffti(n, &wsave[n + 1]);
 } /* cosqi */
 
-void
-cost(integer n, real* x, real* wsave) {
+void cost(integer n, real *x, real *wsave)
+{
     /* Local variables */
     integer i, k;
     real c1, t1, t2;
@@ -2377,8 +2465,8 @@ cost(integer n, real* x, real* wsave) {
     }
 } /* cost */
 
-void
-costi(integer n, real* wsave) {
+void costi(integer n, real *wsave)
+{
     /* Initialized data */
 
     /* Local variables */
@@ -2407,8 +2495,8 @@ costi(integer n, real* wsave) {
     rffti(nm1, &wsave[n + 1]);
 } /* costi */
 
-void
-sinqb(integer n, real* x, real* wsave) {
+void sinqb(integer n, real *x, real *wsave)
+{
     /* Local variables */
     integer k, kc, ns2;
     real xhold;
@@ -2435,8 +2523,8 @@ sinqb(integer n, real* x, real* wsave) {
     }
 } /* sinqb */
 
-void
-sinqf(integer n, real* x, real* wsave) {
+void sinqf(integer n, real *x, real *wsave)
+{
     /* Local variables */
     integer k, kc, ns2;
     real xhold;
@@ -2462,9 +2550,8 @@ sinqf(integer n, real* x, real* wsave) {
     }
 } /* sinqf */
 
-void
-sinqi(integer n, real* wsave) {
-
+void sinqi(integer n, real *wsave)
+{
     /* Parameter adjustments */
     --wsave;
 
@@ -2472,8 +2559,9 @@ sinqi(integer n, real* wsave) {
     cosqi(n, &wsave[1]);
 } /* sinqi */
 
-static void
-sint1(integer n, real* war, real* was, real* xh, real* x, integer* ifac) {
+static void sint1(integer n, real *war, real *was, real *xh, real *x,
+                  integer *ifac)
+{
     /* Initialized data */
 
     static const real sqrt3 = 1.73205080756888;
@@ -2534,8 +2622,8 @@ sint1(integer n, real* war, real* was, real* xh, real* x, integer* ifac) {
     }
 } /* sint1 */
 
-void
-sinti(integer n, real* wsave) {
+void sinti(integer n, real *wsave)
+{
     /* Local variables */
     integer k;
     real dt;
@@ -2557,8 +2645,8 @@ sinti(integer n, real* wsave) {
     rffti(np1, &wsave[ns2 + 1]);
 } /* sinti */
 
-void
-sint(integer n, real* x, real* wsave) {
+void sint(integer n, real *x, real *wsave)
+{
     integer np1, iw1, iw2, iw3;
 
     /* Parameter adjustments */
@@ -2570,15 +2658,15 @@ sint(integer n, real* x, real* wsave) {
     iw1 = n / 2 + 1;
     iw2 = iw1 + np1;
     iw3 = iw2 + np1;
-    sint1(n, &x[1], &wsave[1], &wsave[iw1], &wsave[iw2], (int*)&wsave[iw3]);
+    sint1(n, &x[1], &wsave[1], &wsave[iw1], &wsave[iw2], (int *)&wsave[iw3]);
 } /* sint */
 
 #ifdef TESTING_FFTPACK
 #include <stdio.h>
 
-int
-main(void) {
-    static integer nd[] = {120, 91, 54, 49, 32, 28, 24, 8, 4, 3, 2};
+int main(void)
+{
+    static integer nd[] = { 120, 91, 54, 49, 32, 28, 24, 8, 4, 3, 2 };
 
     /* System generated locals */
     real r1, r2, r3;
@@ -2684,7 +2772,7 @@ main(void) {
             y[(k << 1) - 3] = sum1;
             y[(k << 1) - 2] = -sum2;
         }
-    L104:
+L104:
         sum1 = 0.;
         sum2 = 0.;
         for (i = 1; i <= nm1; i += 2) {
@@ -2715,9 +2803,10 @@ main(void) {
             }
             for (k = 2; k <= ns2; ++k) {
                 arg1 = (real)(k - 1) * arg;
-                sum = sum + x[(k << 1) - 3] * cos(arg1) - x[(k << 1) - 2] * sin(arg1);
+                sum = sum + x[(k << 1) - 3] * cos(arg1)
+                    - x[(k << 1) - 2] * sin(arg1);
             }
-        L108:
+L108:
             if (modn == 0) {
                 sum += (real)pow(-1, i - 1) * .5 * x[n - 1];
             }
@@ -2928,13 +3017,14 @@ main(void) {
                 r1 = cos(arg2);
                 r2 = sin(arg2);
                 q3.r = r1, q3.i = r2;
-                q2.r = q3.r * cx[k - 1].r - q3.i * cx[k - 1].i, q2.i = q3.r * cx[k - 1].i + q3.i * cx[k - 1].r;
+                q2.r = q3.r * cx[k - 1].r - q3.i * cx[k - 1].i,
+                q2.i = q3.r * cx[k - 1].i + q3.i * cx[k - 1].r;
                 q1.r = cy[i - 1].r + q2.r, q1.i = cy[i - 1].i + q2.i;
                 cy[i - 1].r = q1.r, cy[i - 1].i = q1.i;
             }
         }
         cffti(n, w);
-        cfftf(n, (real*)cx, w);
+        cfftf(n, (real *)cx, w);
         dcfftf = 0.;
         for (i = 1; i <= n; ++i) {
             /* Computing MAX */
@@ -2953,12 +3043,13 @@ main(void) {
                 r1 = cos(arg2);
                 r2 = sin(arg2);
                 q3.r = r1, q3.i = r2;
-                q2.r = q3.r * cx[k - 1].r - q3.i * cx[k - 1].i, q2.i = q3.r * cx[k - 1].i + q3.i * cx[k - 1].r;
+                q2.r = q3.r * cx[k - 1].r - q3.i * cx[k - 1].i,
+                q2.i = q3.r * cx[k - 1].i + q3.i * cx[k - 1].r;
                 q1.r = cy[i - 1].r + q2.r, q1.i = cy[i - 1].i + q2.i;
                 cy[i - 1].r = q1.r, cy[i - 1].i = q1.i;
             }
         }
-        cfftb(n, (real*)cx, w);
+        cfftb(n, (real *)cx, w);
         dcfftb = 0.;
         for (i = 1; i <= n; ++i) {
             /* Computing MAX */
@@ -2968,8 +3059,8 @@ main(void) {
             cx[i - 1].r = cy[i - 1].r, cx[i - 1].i = cy[i - 1].i;
         }
         cf = 1. / fn;
-        cfftf(n, (real*)cx, w);
-        cfftb(n, (real*)cx, w);
+        cfftf(n, (real *)cx, w);
+        cfftb(n, (real *)cx, w);
         dcfb = 0.;
         for (i = 1; i <= n; ++i) {
             /* Computing MAX */
@@ -2978,18 +3069,22 @@ main(void) {
             r1 = dcfb, r2 = c_abs(&q1);
             dcfb = dmax(r1, r2);
         }
-        printf("%d\tRFFTF  %10.3g\tRFFTB  %10.ge\tRFFTFB %10.3g", n, rftf, rftb, rftfb);
-        printf("\tSINT   %10.3g\tSINTFB %10.ge\tCOST   %10.3g\n", sintt, sintfb, costt);
-        printf("\tCOSTFB %10.3g\tSINQF  %10.ge\tSINQB  %10.3g", costfb, sinqft, sinqbt);
-        printf("\tSINQFB %10.3g\tCOSQF  %10.ge\tCOSQB  %10.3g\n", sinqfb, cosqft, cosqbt);
+        printf("%d\tRFFTF  %10.3g\tRFFTB  %10.ge\tRFFTFB %10.3g", n, rftf, rftb,
+               rftfb);
+        printf("\tSINT   %10.3g\tSINTFB %10.ge\tCOST   %10.3g\n", sintt, sintfb,
+               costt);
+        printf("\tCOSTFB %10.3g\tSINQF  %10.ge\tSINQB  %10.3g", costfb, sinqft,
+               sinqbt);
+        printf("\tSINQFB %10.3g\tCOSQF  %10.ge\tCOSQB  %10.3g\n", sinqfb,
+               cosqft, cosqbt);
         printf("\tCOSQFB %10.3g\t", cosqfb);
         printf("\tCFFTF  %10.ge\tCFFTB  %10.3g\n", dcfftf, dcfftb);
         printf("\tCFFTFB %10.3g\n", dcfb);
 
-#define CHECK(x)                                                                                                       \
-    if (x > 1e-3) {                                                                                                    \
-        printf(#x " failed: %g\n", x);                                                                                 \
-        all_ok = 0;                                                                                                    \
+#define CHECK(x)                       \
+    if (x > 1e-3) {                    \
+        printf(#x " failed: %g\n", x); \
+        all_ok = 0;                    \
     }
         CHECK(rftf);
         CHECK(rftb);

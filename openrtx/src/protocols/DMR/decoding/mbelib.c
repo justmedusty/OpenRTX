@@ -29,10 +29,12 @@
 #include <stdio.h>
 #include <string.h>
 #if defined(MBELIB_ENABLE_SIMD)
-#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) || defined(__x86_64__)
+#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) \
+    || defined(__x86_64__)
 #include <emmintrin.h>
 #endif
-#if defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) || defined(_M_ARM64)
+#if defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) \
+    || defined(_M_ARM64)
 #include <arm_neon.h>
 #endif
 #if defined(__i386__) || defined(_M_IX86)
@@ -55,14 +57,14 @@
 static MBE_THREAD_LOCAL uint32_t mbe_rng_state = 0x12345678u;
 
 /* Thread-local FFT plan for unvoiced synthesis */
-static MBE_THREAD_LOCAL mbe_fft_plan* mbe_fft_plan_instance = NULL;
+static MBE_THREAD_LOCAL mbe_fft_plan *mbe_fft_plan_instance = NULL;
 
 /**
  * @brief Get or create the thread-local FFT plan.
  * @return FFT plan for unvoiced synthesis, or NULL on allocation failure.
  */
-static mbe_fft_plan*
-mbe_get_fft_plan(void) {
+static mbe_fft_plan *mbe_get_fft_plan(void)
+{
     if (MBE_LIKELY(mbe_fft_plan_instance != NULL)) {
         return mbe_fft_plan_instance;
     }
@@ -70,8 +72,8 @@ mbe_get_fft_plan(void) {
     return mbe_fft_plan_instance;
 }
 
-void
-mbe_setThreadRngSeed(uint32_t seed) {
+void mbe_setThreadRngSeed(uint32_t seed)
+{
     if (seed == 0u) {
         seed = 0x6d25357bu; /* avoid zero state */
     }
@@ -86,8 +88,8 @@ mbe_setThreadRngSeed(uint32_t seed) {
 #if defined(__GNUC__) || defined(__clang__)
 __attribute__((unused))
 #endif
-static inline uint32_t
-mbe_xorshift32(void) {
+static inline uint32_t mbe_xorshift32(void)
+{
     uint32_t x = mbe_rng_state;
     x ^= x << 13;
     x ^= x >> 17;
@@ -117,9 +119,11 @@ mbe_xorshift32(void) {
  * @param cd cos(Δθ) per step.
  */
 /** @internal @ingroup mbe_internal */
-static inline void
-mbe_add_voiced_block4(float* restrict Ss, const float* restrict W, float amp, float* restrict c, float* restrict s,
-                      float sd, float cd) {
+static inline void mbe_add_voiced_block4(float *restrict Ss,
+                                         const float *restrict W, float amp,
+                                         float *restrict c, float *restrict s,
+                                         float sd, float cd)
+{
     /* produce c[0..3] from current state */
     float cblk[4];
     float cc = *c, ss = *s;
@@ -133,18 +137,22 @@ mbe_add_voiced_block4(float* restrict Ss, const float* restrict W, float amp, fl
     *c = cc;
     *s = ss;
 #if defined(MBELIB_ENABLE_SIMD)
-#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) || defined(__x86_64__)
+#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) \
+    || defined(__x86_64__)
     __m128 vC = _mm_loadu_ps(cblk);
     __m128 vW = _mm_loadu_ps(W);
-    __m128 vA = _mm_set1_ps(2.0f * amp); /* JMBE multiplies voiced output by 2.0 */
+    __m128 vA =
+        _mm_set1_ps(2.0f * amp); /* JMBE multiplies voiced output by 2.0 */
     __m128 vS = _mm_loadu_ps(Ss);
     vS = _mm_add_ps(vS, _mm_mul_ps(_mm_mul_ps(vC, vW), vA));
     _mm_storeu_ps(Ss, vS);
     return;
-#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) || defined(_M_ARM64)
+#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) \
+    || defined(_M_ARM64)
     float32x4_t vC = vld1q_f32(cblk);
     float32x4_t vW = vld1q_f32(W);
-    float32x4_t vA = vdupq_n_f32(2.0f * amp); /* JMBE multiplies voiced output by 2.0 */
+    float32x4_t vA =
+        vdupq_n_f32(2.0f * amp); /* JMBE multiplies voiced output by 2.0 */
     float32x4_t vS = vld1q_f32(Ss);
     vS = vaddq_f32(vS, vmulq_f32(vmulq_f32(vC, vW), vA));
     vst1q_f32(Ss, vS);
@@ -162,8 +170,8 @@ mbe_add_voiced_block4(float* restrict Ss, const float* restrict W, float amp, fl
  * @brief Write the library version string into the provided buffer.
  * @param str Output buffer receiving a NUL-terminated version string.
  */
-void
-mbe_printVersion(char* str) {
+void mbe_printVersion(char *str)
+{
     if (!str) {
         return;
     }
@@ -174,8 +182,8 @@ mbe_printVersion(char* str) {
 /* @} end of mbe_internal */
 
 /* Convenience accessor that avoids buffer management. */
-const char*
-mbe_versionString(void) {
+const char *mbe_versionString(void)
+{
     return MBELIB_VERSION;
 }
 
@@ -189,8 +197,8 @@ mbe_versionString(void) {
  * field copies. The mbe_parms struct contains no pointers, so shallow copy
  * is correct and safe.
  */
-void
-mbe_moveMbeParms(mbe_parms* in, mbe_parms* out) {
+void mbe_moveMbeParms(mbe_parms *in, mbe_parms *out)
+{
     *out = *in;
 }
 
@@ -201,8 +209,8 @@ mbe_moveMbeParms(mbe_parms* in, mbe_parms* out) {
  *
  * Uses struct assignment for efficiency. See mbe_moveMbeParms() for details.
  */
-void
-mbe_useLastMbeParms(mbe_parms* out, mbe_parms* in) {
+void mbe_useLastMbeParms(mbe_parms *out, mbe_parms *in)
+{
     *out = *in;
 }
 
@@ -212,9 +220,9 @@ mbe_useLastMbeParms(mbe_parms* out, mbe_parms* in) {
  * @param prev_mp Output: previous parameter state (reset to defaults).
  * @param prev_mp_enhanced Output: enhanced previous parameter state.
  */
-void
-mbe_initMbeParms(mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhanced) {
-
+void mbe_initMbeParms(mbe_parms *cur_mp, mbe_parms *prev_mp,
+                      mbe_parms *prev_mp_enhanced)
+{
     int l;
     prev_mp->swn = 0;
     prev_mp->w0 = 0.09378;
@@ -258,9 +266,8 @@ mbe_initMbeParms(mbe_parms* cur_mp, mbe_parms* prev_mp, mbe_parms* prev_mp_enhan
  *
  * Uses SIMD optimizations for accumulation and scaling loops when available.
  */
-void
-mbe_spectralAmpEnhance(mbe_parms* cur_mp) {
-
+void mbe_spectralAmpEnhance(mbe_parms *cur_mp)
+{
     float Rm0, Rm1, R2m0, R2m1, Wl[57];
     int l;
     float sum, gamma;
@@ -287,7 +294,8 @@ mbe_spectralAmpEnhance(mbe_parms* cur_mp) {
     Rm0 = 0.0f;
     Rm1 = 0.0f;
 #if defined(MBELIB_ENABLE_SIMD)
-#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) || defined(__x86_64__)
+#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) \
+    || defined(__x86_64__)
     if (L >= 4) {
         __m128 vRm0 = _mm_setzero_ps();
         __m128 vRm1 = _mm_setzero_ps();
@@ -319,7 +327,8 @@ mbe_spectralAmpEnhance(mbe_parms* cur_mp) {
             Rm1 += Ml2 * cos_tab[l];
         }
     } else
-#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) || defined(_M_ARM64)
+#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) \
+    || defined(_M_ARM64)
     if (L >= 4) {
         float32x4_t vRm0 = vdupq_n_f32(0.0f);
         float32x4_t vRm1 = vdupq_n_f32(0.0f);
@@ -364,8 +373,10 @@ mbe_spectralAmpEnhance(mbe_parms* cur_mp) {
         if (cur_mp->Ml[l] != 0.0f) {
             const float cos_w0l = cos_tab[l];
             Wl[l] = sqrtf(cur_mp->Ml[l])
-                    * sqrtf(sqrtf(((float)0.96 * (float)M_PI * ((R2m0 + R2m1) - ((float)2 * Rm0 * Rm1 * cos_w0l)))
-                                  / (cur_mp->w0 * Rm0 * (R2m0 - R2m1))));
+                  * sqrtf(sqrtf(
+                      ((float)0.96 * (float)M_PI
+                       * ((R2m0 + R2m1) - ((float)2 * Rm0 * Rm1 * cos_w0l)))
+                      / (cur_mp->w0 * Rm0 * (R2m0 - R2m1))));
 
             if ((8 * l) <= L) {
                 /* no-op for low harmonics */
@@ -383,7 +394,8 @@ mbe_spectralAmpEnhance(mbe_parms* cur_mp) {
      * Uses SIMD when available */
     sum = 0.0f;
 #if defined(MBELIB_ENABLE_SIMD)
-#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) || defined(__x86_64__)
+#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) \
+    || defined(__x86_64__)
     if (L >= 4) {
         __m128 vsum = _mm_setzero_ps();
         __m128 sign_mask = _mm_set1_ps(-0.0f);
@@ -409,7 +421,8 @@ mbe_spectralAmpEnhance(mbe_parms* cur_mp) {
             sum += (M * M);
         }
     } else
-#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) || defined(_M_ARM64)
+#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) \
+    || defined(_M_ARM64)
     if (L >= 4) {
         float32x4_t vsum = vdupq_n_f32(0.0f);
         int l4;
@@ -453,7 +466,8 @@ mbe_spectralAmpEnhance(mbe_parms* cur_mp) {
     /* Apply scaling factor to all bands
      * Uses SIMD when available */
 #if defined(MBELIB_ENABLE_SIMD)
-#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) || defined(__x86_64__)
+#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) \
+    || defined(__x86_64__)
     if (L >= 4) {
         __m128 vgamma = _mm_set1_ps(gamma);
         int l4;
@@ -467,7 +481,8 @@ mbe_spectralAmpEnhance(mbe_parms* cur_mp) {
             cur_mp->Ml[l] = gamma * cur_mp->Ml[l];
         }
     } else
-#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) || defined(_M_ARM64)
+#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) \
+    || defined(_M_ARM64)
     if (L >= 4) {
         float32x4_t vgamma = vdupq_n_f32(gamma);
         int l4;
@@ -498,10 +513,10 @@ mbe_spectralAmpEnhance(mbe_parms* cur_mp) {
  * @param ambe_d   AMBE parameter bits (49) providing tone indices.
  * @param cur_mp   Current parameter set (tone synthesis state).
  */
-void
-mbe_synthesizeTonef(float* aout_buf, char* ambe_d, mbe_parms* cur_mp) {
+void mbe_synthesizeTonef(float *aout_buf, char *ambe_d, mbe_parms *cur_mp)
+{
     int i, n;
-    float* aout_buf_p;
+    float *aout_buf_p;
 
     int u0, u1, u2, u3;
     u0 = u1 = u2 = u3 = 0;
@@ -541,7 +556,7 @@ mbe_synthesizeTonef(float* aout_buf, char* ambe_d, mbe_parms* cur_mp) {
     (void)ID0;
     (void)ID2;
     (void)ID3;
-    (void)ID4; // parsed for potential validation
+    (void)ID4;            // parsed for potential validation
 
 #ifdef DISABLE_AMBE_TONES // generate silence if tones disabled
     aout_buf_p = aout_buf;
@@ -742,7 +757,9 @@ mbe_synthesizeTonef(float* aout_buf, char* ambe_d, mbe_parms* cur_mp) {
     amplitude = AD * 75.0f; //
     aout_buf_p = aout_buf;
     for (n = 0; n < 160; n++) {
-        *aout_buf_p = amplitude * (sinf((cur_mp->swn) * step1) / 2.0f + sinf((cur_mp->swn) * step2) / 2.0f);
+        *aout_buf_p = amplitude
+                    * (sinf((cur_mp->swn) * step1) / 2.0f
+                       + sinf((cur_mp->swn) * step2) / 2.0f);
         *aout_buf_p = *aout_buf_p / 6.0f;
         aout_buf_p++;
         cur_mp->swn++;
@@ -757,10 +774,11 @@ mbe_synthesizeTonef(float* aout_buf, char* ambe_d, mbe_parms* cur_mp) {
  * @param cur_mp   Current parameter set.
  * @param ID1      Tone index selector.
  */
-void
-mbe_synthesizeTonefdstar(float* aout_buf, char* ambe_d, mbe_parms* cur_mp, int ID1) {
+void mbe_synthesizeTonefdstar(float *aout_buf, char *ambe_d, mbe_parms *cur_mp,
+                              int ID1)
+{
     int n;
-    float* aout_buf_p;
+    float *aout_buf_p;
 
     int AD = 103; // nominal amplitude aligned with other tone cases
     float step1, step2, amplitude;
@@ -803,7 +821,9 @@ mbe_synthesizeTonefdstar(float* aout_buf, char* ambe_d, mbe_parms* cur_mp, int I
     amplitude = AD * 75.0f; //
     aout_buf_p = aout_buf;
     for (n = 0; n < 160; n++) {
-        *aout_buf_p = amplitude * (sinf((cur_mp->swn) * step1) / 2.0f + sinf((cur_mp->swn) * step2) / 2.0f);
+        *aout_buf_p = amplitude
+                    * (sinf((cur_mp->swn) * step1) / 2.0f
+                       + sinf((cur_mp->swn) * step2) / 2.0f);
         *aout_buf_p = *aout_buf_p / 6.0f;
         aout_buf_p++;
         cur_mp->swn++;
@@ -814,8 +834,8 @@ mbe_synthesizeTonefdstar(float* aout_buf, char* ambe_d, mbe_parms* cur_mp, int I
  * @brief Write 160 float samples of silence.
  * @param aout_buf Output buffer of 160 float samples.
  */
-void
-mbe_synthesizeSilencef(float* aout_buf) {
+void mbe_synthesizeSilencef(float *aout_buf)
+{
     memset(aout_buf, 0, 160 * sizeof(*aout_buf));
 }
 
@@ -823,8 +843,8 @@ mbe_synthesizeSilencef(float* aout_buf) {
  * @brief Write 160 16-bit samples of silence.
  * @param aout_buf Output buffer of 160 16-bit samples.
  */
-void
-mbe_synthesizeSilence(short* aout_buf) {
+void mbe_synthesizeSilence(short *aout_buf)
+{
     memset(aout_buf, 0, 160 * sizeof(*aout_buf));
 }
 
@@ -842,11 +862,11 @@ mbe_synthesizeSilence(short* aout_buf) {
 /* JMBE-compatible white noise scalar for phase calculation: 2*PI / 53125 */
 #define MBE_WHITE_NOISE_SCALAR (2.0f * (float)M_PI / 53125.0f)
 
-void
-mbe_synthesizeSpeechf(float* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, int uvquality) {
-
+void mbe_synthesizeSpeechf(float *aout_buf, mbe_parms *cur_mp,
+                           mbe_parms *prev_mp, int uvquality)
+{
     int l, n, maxl;
-    float* Ss;
+    float *Ss;
     int numUv;
     float cw0, pw0, cw0l, pw0l;
 
@@ -867,7 +887,8 @@ mbe_synthesizeSpeechf(float* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, in
     /* Algorithm #117: Generate 256 white noise samples FIRST (JMBE-compatible)
      * This buffer is used for both phase calculation and unvoiced synthesis */
     float noise_buffer[256];
-    mbe_generate_noise_with_overlap(noise_buffer, &cur_mp->noiseSeed, cur_mp->noiseOverlap);
+    mbe_generate_noise_with_overlap(noise_buffer, &cur_mp->noiseSeed,
+                                    cur_mp->noiseOverlap);
 
     /* Count number of unvoiced bands */
     numUv = 0;
@@ -906,14 +927,16 @@ mbe_synthesizeSpeechf(float* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, in
     /* Update phase from eq 139, 140
      * JMBE-compatible: use noise_buffer[l] for phase randomization instead of separate RNG */
     for (l = 1; l <= 56; l++) {
-        cur_mp->PSIl[l] = prev_mp->PSIl[l] + ((pw0 + cw0) * ((float)(l * N) / 2.0f));
+        cur_mp->PSIl[l] = prev_mp->PSIl[l]
+                        + ((pw0 + cw0) * ((float)(l * N) / 2.0f));
         if (l <= (cur_mp->L / 4)) {
             cur_mp->PHIl[l] = cur_mp->PSIl[l];
         } else {
             /* JMBE Algorithm #140: Use noise sample for phase jitter
              * pl = (2*PI/53125) * u[l] - PI maps noise to [-PI, +PI] */
             float pl = (MBE_WHITE_NOISE_SCALAR * noise_buffer[l]) - (float)M_PI;
-            cur_mp->PHIl[l] = cur_mp->PSIl[l] + (((float)numUv * pl) / (float)cur_mp->L);
+            cur_mp->PHIl[l] = cur_mp->PSIl[l]
+                            + (((float)numUv * pl) / (float)cur_mp->L);
         }
     }
 
@@ -932,26 +955,33 @@ mbe_synthesizeSpeechf(float* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, in
         if (cur_voiced || prev_voiced) {
             /* Use interpolation for low harmonics (l < 8) with stable pitch
              * This produces smoother transitions per JMBE Algorithms #134-138 */
-            int use_interpolation = (l < 8) && cur_voiced && prev_voiced && (fabsf(cw0 - pw0) < (0.1f * cw0));
+            int use_interpolation = (l < 8) && cur_voiced && prev_voiced
+                                 && (fabsf(cw0 - pw0) < (0.1f * cw0));
 
             if (use_interpolation) {
                 Ss = aout_buf;
 
                 /* Algorithm #137: Phase deviation */
-                float deltaphil = cur_mp->PHIl[l] - prev_mp->PHIl[l] - (((pw0 + cw0) * (float)(l * N)) / 2.0f);
+                float deltaphil = cur_mp->PHIl[l] - prev_mp->PHIl[l]
+                                - (((pw0 + cw0) * (float)(l * N)) / 2.0f);
 
                 /* Algorithm #138: Phase deviation rate (wrap to [-pi, pi]) */
-                float deltawl =
-                    (1.0f / (float)N)
-                    * (deltaphil - (2.0f * (float)M_PI * floorf((deltaphil + (float)M_PI) / (2.0f * (float)M_PI))));
+                float deltawl = (1.0f / (float)N)
+                              * (deltaphil
+                                 - (2.0f * (float)M_PI
+                                    * floorf((deltaphil + (float)M_PI)
+                                             / (2.0f * (float)M_PI))));
 
                 for (n = 0; n < N; n++) {
                     /* Algorithm #136: Phase function with quadratic frequency interpolation */
-                    float thetaln = prev_mp->PHIl[l] + ((pw0l + deltawl) * (float)n)
-                                    + (((cw0 - pw0) * (float)(l * n * n)) / (float)(2 * N));
+                    float thetaln =
+                        prev_mp->PHIl[l] + ((pw0l + deltawl) * (float)n)
+                        + (((cw0 - pw0) * (float)(l * n * n)) / (float)(2 * N));
 
                     /* Algorithm #135: Linear amplitude interpolation */
-                    float aln = prev_mp->Ml[l] + (((float)n / (float)N) * (cur_mp->Ml[l] - prev_mp->Ml[l]));
+                    float aln = prev_mp->Ml[l]
+                              + (((float)n / (float)N)
+                                 * (cur_mp->Ml[l] - prev_mp->Ml[l]));
 
                     /* Algorithm #134: Synthesize sample (JMBE multiplies by 2.0) */
                     *Ss += 2.0f * aln * cosf(thetaln);
@@ -970,7 +1000,8 @@ mbe_synthesizeSpeechf(float* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, in
                     mbe_sincosf(prev_mp->PHIl[l], &s_prev, &c_prev);
 
                     for (n = 0; n < N; n += 4) {
-                        mbe_add_voiced_block4(Ss, Ws + n + N, amp_prev, &c_prev, &s_prev, sd_prev, cd_prev);
+                        mbe_add_voiced_block4(Ss, Ws + n + N, amp_prev, &c_prev,
+                                              &s_prev, sd_prev, cd_prev);
                         Ss += 4;
                     }
                 }
@@ -982,10 +1013,12 @@ mbe_synthesizeSpeechf(float* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, in
                     float sd_cur, cd_cur;
                     mbe_sincosf(cw0l, &sd_cur, &cd_cur);
                     float s_cur, c_cur;
-                    mbe_sincosf(cur_mp->PHIl[l] - (cw0l * (float)N), &s_cur, &c_cur);
+                    mbe_sincosf(cur_mp->PHIl[l] - (cw0l * (float)N), &s_cur,
+                                &c_cur);
 
                     for (n = 0; n < N; n += 4) {
-                        mbe_add_voiced_block4(Ss, Ws + n, amp_cur, &c_cur, &s_cur, sd_cur, cd_cur);
+                        mbe_add_voiced_block4(Ss, Ws + n, amp_cur, &c_cur,
+                                              &s_cur, sd_cur, cd_cur);
                         Ss += 4;
                     }
                 }
@@ -995,9 +1028,10 @@ mbe_synthesizeSpeechf(float* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, in
 
     /* Synthesize unvoiced components using FFT method (JMBE Algorithms #117-126)
      * Use the same noise buffer that was used for phase calculation */
-    mbe_fft_plan* plan = mbe_get_fft_plan();
+    mbe_fft_plan *plan = mbe_get_fft_plan();
     if (plan) {
-        mbe_synthesizeUnvoicedFFTWithNoise(aout_buf, cur_mp, prev_mp, plan, noise_buffer);
+        mbe_synthesizeUnvoicedFFTWithNoise(aout_buf, cur_mp, prev_mp, plan,
+                                           noise_buffer);
     }
 }
 
@@ -1008,8 +1042,9 @@ mbe_synthesizeSpeechf(float* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, in
  * @param prev_mp  Previous parameter set.
  * @param uvquality Unvoiced synthesis quality (1..64).
  */
-void
-mbe_synthesizeSpeech(short* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, int uvquality) {
+void mbe_synthesizeSpeech(short *aout_buf, mbe_parms *cur_mp,
+                          mbe_parms *prev_mp, int uvquality)
+{
     float float_buf[160];
 
     mbe_synthesizeSpeechf(float_buf, cur_mp, prev_mp, uvquality);
@@ -1031,10 +1066,12 @@ mbe_synthesizeSpeech(short* aout_buf, mbe_parms* cur_mp, mbe_parms* prev_mp, int
  * @param aout_buf  Output 160 int16 samples.
  */
 #if defined(MBELIB_ENABLE_SIMD)
-static void
-mbe_floattoshort_scalar(float* restrict float_buf, short* restrict aout_buf) {
+static void mbe_floattoshort_scalar(float *restrict float_buf,
+                                    short *restrict aout_buf)
+{
     /* JMBE-compatible soft clipping at 95% of maximum amplitude */
-    const float again = 8.0f;  /* Adjusted for proper decode output levels - reduced for DMR */
+    const float again =
+        8.0f; /* Adjusted for proper decode output levels - reduced for DMR */
     const float max_amplitude = 32767.0f * 0.95f; /* ~31128.65 */
     for (int i = 0; i < 160; i++) {
         float audio = again * float_buf[i];
@@ -1056,11 +1093,14 @@ mbe_floattoshort_scalar(float* restrict float_buf, short* restrict aout_buf) {
 /**
  * @brief SSE2 specialization for float→int16 conversion.
  */
-#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) || defined(__x86_64__)
-static void
-mbe_floattoshort_sse2(float* restrict float_buf, short* restrict aout_buf) {
+#if defined(__SSE2__) || defined(_M_AMD64) || defined(_M_X64) \
+    || defined(__x86_64__)
+static void mbe_floattoshort_sse2(float *restrict float_buf,
+                                  short *restrict aout_buf)
+{
     /* JMBE-compatible soft clipping at 95% of maximum amplitude */
-    const __m128 vscale = _mm_set1_ps(8.0f);  /* Adjusted for proper levels - reduced for DMR */
+    const __m128 vscale =
+        _mm_set1_ps(8.0f); /* Adjusted for proper levels - reduced for DMR */
     const __m128 vmaxv = _mm_set1_ps(32767.0f * 0.95f);
     const __m128 vminv = _mm_set1_ps(-32767.0f * 0.95f);
     for (int i = 0; i < 160; i += 8) {
@@ -1071,7 +1111,7 @@ mbe_floattoshort_sse2(float* restrict float_buf, short* restrict aout_buf) {
         __m128i ia = _mm_cvttps_epi32(a);
         __m128i ib = _mm_cvttps_epi32(b);
         __m128i packed = _mm_packs_epi32(ia, ib);
-        _mm_storeu_si128((__m128i*)(aout_buf + i), packed);
+        _mm_storeu_si128((__m128i *)(aout_buf + i), packed);
     }
 }
 #endif
@@ -1079,11 +1119,14 @@ mbe_floattoshort_sse2(float* restrict float_buf, short* restrict aout_buf) {
 /**
  * @brief NEON specialization for float→int16 conversion.
  */
-#if defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) || defined(_M_ARM64)
-static void
-mbe_floattoshort_neon(float* restrict float_buf, short* restrict aout_buf) {
+#if defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) \
+    || defined(_M_ARM64)
+static void mbe_floattoshort_neon(float *restrict float_buf,
+                                  short *restrict aout_buf)
+{
     /* JMBE-compatible soft clipping at 95% of maximum amplitude */
-    const float32x4_t vscale = vdupq_n_f32(8.0f);  /* Adjusted for proper levels - reduced for DMR */
+    const float32x4_t vscale =
+        vdupq_n_f32(8.0f); /* Adjusted for proper levels - reduced for DMR */
     const float32x4_t vmaxv = vdupq_n_f32(32767.0f * 0.95f);
     const float32x4_t vminv = vdupq_n_f32(-32767.0f * 0.95f);
     for (int i = 0; i < 160; i += 8) {
@@ -1101,14 +1144,15 @@ mbe_floattoshort_neon(float* restrict float_buf, short* restrict aout_buf) {
 }
 #endif
 
-typedef void (*mbe_floattoshort_fn)(float*, short*);
-static mbe_floattoshort_fn mbe_floattoshort_impl = NULL; /**< Runtime-selected impl pointer. */
+typedef void (*mbe_floattoshort_fn)(float *, short *);
+static mbe_floattoshort_fn mbe_floattoshort_impl =
+    NULL; /**< Runtime-selected impl pointer. */
 
 /**
  * @brief Initialize runtime dispatch by probing CPU features.
  */
-static void
-mbe_init_runtime_dispatch(void) {
+static void mbe_init_runtime_dispatch(void)
+{
     if (mbe_floattoshort_impl) {
         return;
     }
@@ -1123,7 +1167,7 @@ mbe_init_runtime_dispatch(void) {
 #elif defined(__i386__) || defined(_M_IX86)
     /* Probe SSE2 on 32-bit x86 */
 #if defined(_MSC_VER)
-    int regs[4] = {0};
+    int regs[4] = { 0 };
     __cpuid(regs, 1);
     int edx = regs[3];
     if (edx & (1 << 26)) {
@@ -1144,7 +1188,8 @@ mbe_init_runtime_dispatch(void) {
 #endif
 #elif defined(__aarch64__) || defined(_M_ARM64)
     /* NEON is mandatory on AArch64 */
-#if defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) || defined(_M_ARM64)
+#if defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(__aarch64__) \
+    || defined(_M_ARM64)
     mbe_floattoshort_impl = mbe_floattoshort_neon;
 #endif
 #elif defined(__ARM_NEON) || defined(__ARM_NEON__)
@@ -1153,8 +1198,8 @@ mbe_init_runtime_dispatch(void) {
 #endif
 }
 
-void
-mbe_floattoshort(float* restrict float_buf, short* restrict aout_buf) {
+void mbe_floattoshort(float *restrict float_buf, short *restrict aout_buf)
+{
     if (MBE_UNLIKELY(!mbe_floattoshort_impl)) {
         mbe_init_runtime_dispatch();
     }
@@ -1162,11 +1207,12 @@ mbe_floattoshort(float* restrict float_buf, short* restrict aout_buf) {
 }
 
 #else /* MBELIB_ENABLE_SIMD not set: keep scalar implementation */
-void
-mbe_floattoshort(float* restrict float_buf, short* restrict aout_buf) {
+void mbe_floattoshort(float *restrict float_buf, short *restrict aout_buf)
+{
     /* JMBE-compatible soft clipping at 95% of maximum amplitude
      * This provides headroom and prevents harsh clipping artifacts */
-    const float again = 8.0f;  /* Adjusted for proper decode output levels - reduced for DMR */
+    const float again =
+        8.0f; /* Adjusted for proper decode output levels - reduced for DMR */
     const float max_amplitude = 32767.0f * 0.95f; /* ~31128.65 */
     for (int i = 0; i < 160; i++) {
         float audio = again * float_buf[i];

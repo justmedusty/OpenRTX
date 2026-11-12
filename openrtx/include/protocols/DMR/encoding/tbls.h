@@ -22,7 +22,6 @@
 #ifndef _TBLS
 #define _TBLS
 
-
 //-----------------------------------------------------------------------------
 //
 // Bit allocation and ancillary tables
@@ -96,4 +95,3 @@ extern const Word16 wr[];
 extern const Word16 wr_sp[];
 
 #endif
-

@@ -41,7 +41,8 @@
  * this is the original code from the ETSI file typedef.h
  */
 
-#if defined(__BORLANDC__) || defined(__WATCOMC__) || defined(_MSC_VER) || defined(__ZTC__)
+#if defined(__BORLANDC__) || defined(__WATCOMC__) || defined(_MSC_VER) \
+    || defined(__ZTC__)
 typedef signed char Word8;
 typedef short Word16;
 typedef long Word32;
@@ -71,4 +72,3 @@ typedef int Flag;
 #endif
 
 #endif
-

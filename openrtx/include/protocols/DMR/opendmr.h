@@ -30,13 +30,13 @@ extern "C" {
  */
 
 /* Frame sizes */
-#define OPENDMR_AMBE_FRAME_BYTES    9       /* 72 bits = 9 bytes */
-#define OPENDMR_AMBE_FRAME_BITS     72      /* AMBE+2 frame size */
-#define OPENDMR_PCM_SAMPLES         160     /* 20ms @ 8kHz sample rate */
-#define OPENDMR_SAMPLE_RATE         8000    /* 8kHz audio */
+#define OPENDMR_AMBE_FRAME_BYTES 9 /* 72 bits = 9 bytes */
+#define OPENDMR_AMBE_FRAME_BITS 72 /* AMBE+2 frame size */
+#define OPENDMR_PCM_SAMPLES 160    /* 20ms @ 8kHz sample rate */
+#define OPENDMR_SAMPLE_RATE 8000   /* 8kHz audio */
 
 /* Voice parameter sizes */
-#define OPENDMR_VOICE_PARAMS        49      /* 49-bit voice parameters */
+#define OPENDMR_VOICE_PARAMS 49 /* 49-bit voice parameters */
 
 /*
  * ============================================================================
@@ -86,8 +86,7 @@ void opendmr_decoder_destroy(opendmr_decoder_t *dec);
  */
 bool opendmr_decode(opendmr_decoder_t *dec,
                     const uint8_t ambe[OPENDMR_AMBE_FRAME_BYTES],
-                    int16_t pcm[OPENDMR_PCM_SAMPLES],
-                    int *errs);
+                    int16_t pcm[OPENDMR_PCM_SAMPLES], int *errs);
 
 /**
  * Reset decoder state (e.g., at start of new transmission).
@@ -171,8 +170,7 @@ const char *opendmr_version(void);
  * @param to_bits   true = bytes->bits, false = bits->bytes.
  */
 void opendmr_convert_frame(uint8_t bytes[OPENDMR_AMBE_FRAME_BYTES],
-                           uint8_t bits[OPENDMR_AMBE_FRAME_BITS],
-                           bool to_bits);
+                           uint8_t bits[OPENDMR_AMBE_FRAME_BITS], bool to_bits);
 
 #ifdef __cplusplus
 }

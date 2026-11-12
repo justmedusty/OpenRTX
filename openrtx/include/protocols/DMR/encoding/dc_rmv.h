@@ -19,7 +19,6 @@
  * 02110-1301, USA.
  */
 
-
 #ifndef _DC_RMV
 #define _DC_RMV
 

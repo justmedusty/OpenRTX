@@ -24,9 +24,9 @@ extern "C" {
  * ============================================================================
  */
 
-#define OPENDMR_VERSION_MAJOR   1
-#define OPENDMR_VERSION_MINOR   0
-#define OPENDMR_VERSION_PATCH   0
+#define OPENDMR_VERSION_MAJOR 1
+#define OPENDMR_VERSION_MINOR 0
+#define OPENDMR_VERSION_PATCH 0
 
 static const char *version_string = "1.0.0";
 
@@ -53,7 +53,8 @@ struct opendmr_decoder {
 
 opendmr_decoder_t *opendmr_decoder_create(void)
 {
-    opendmr_decoder_t *dec = static_cast<opendmr_decoder_t *>(calloc(1, sizeof(opendmr_decoder_t)));
+    opendmr_decoder_t *dec =
+        static_cast<opendmr_decoder_t *>(calloc(1, sizeof(opendmr_decoder_t)));
     if (dec) {
         mbe_initMbeParms(&dec->cur_mp, &dec->prev_mp, &dec->prev_mp_enhanced);
     }
@@ -82,7 +83,8 @@ static uint32_t compute_prng_mask_23bit(uint32_t aOrig)
     pr[0] = static_cast<uint16_t>(16U * aOrig);
 
     for (int i = 1; i < 24; i++) {
-        pr[i] = static_cast<uint16_t>((173U * static_cast<uint32_t>(pr[i - 1]) + 13849U) % 65536U);
+        pr[i] = static_cast<uint16_t>(
+            (173U * static_cast<uint32_t>(pr[i - 1]) + 13849U) % 65536U);
     }
 
     for (int i = 1; i < 24; i++) {
@@ -168,8 +170,7 @@ static void decode_ambe_frame(const uint8_t *frame72, char ambe_d[49])
 
 bool opendmr_decode(opendmr_decoder_t *dec,
                     const uint8_t ambe[OPENDMR_AMBE_FRAME_BYTES],
-                    int16_t pcm[OPENDMR_PCM_SAMPLES],
-                    int *errs)
+                    int16_t pcm[OPENDMR_PCM_SAMPLES], int *errs)
 {
     if (!dec || !ambe || !pcm)
         return false;
@@ -181,11 +182,11 @@ bool opendmr_decode(opendmr_decoder_t *dec,
     /* Decode voice parameters to PCM using mbelib */
     int err_count = 0;
     int err_count2 = 0;
-    char err_str[64] = {0};
+    char err_str[64] = { 0 };
 
-    mbe_processAmbe2450Data(pcm, &err_count, &err_count2, err_str,
-                            ambe_d, &dec->cur_mp, &dec->prev_mp,
-                            &dec->prev_mp_enhanced, 3);
+    mbe_processAmbe2450Data(pcm, &err_count, &err_count2, err_str, ambe_d,
+                            &dec->cur_mp, &dec->prev_mp, &dec->prev_mp_enhanced,
+                            3);
 
     if (errs)
         *errs = err_count;
@@ -206,7 +207,8 @@ struct opendmr_encoder {
 
 opendmr_encoder_t *opendmr_encoder_create(void)
 {
-    opendmr_encoder_t *enc = static_cast<opendmr_encoder_t *>(calloc(1, sizeof(opendmr_encoder_t)));
+    opendmr_encoder_t *enc =
+        static_cast<opendmr_encoder_t *>(calloc(1, sizeof(opendmr_encoder_t)));
     if (enc) {
         enc->enc = new (std::nothrow) MBEEncoder();
         if (!enc->enc) {
@@ -214,7 +216,7 @@ opendmr_encoder_t *opendmr_encoder_create(void)
             free(enc);
             return nullptr;
         }
-        enc->enc->set_dmr_mode();   /* AMBE+2 mode */
+        enc->enc->set_dmr_mode(); /* AMBE+2 mode */
         enc->enc->set_gain_adjust(1.0f);
         enc->gain_db = 0;
     }
@@ -248,8 +250,10 @@ void opendmr_encoder_set_gain(opendmr_encoder_t *enc, int gain_db)
 {
     if (enc && enc->enc) {
         /* Clamp to reasonable range */
-        if (gain_db < -20) gain_db = -20;
-        if (gain_db > 20) gain_db = 20;
+        if (gain_db < -20)
+            gain_db = -20;
+        if (gain_db > 20)
+            gain_db = 20;
         enc->gain_db = gain_db;
         enc->enc->set_gain_adjust(powf(10.0f, gain_db / 20.0f));
     }
@@ -264,9 +268,9 @@ void opendmr_encoder_set_gain(opendmr_encoder_t *enc, int gain_db)
 static void encode_ambe_frame(const int b[9], uint8_t *frame72)
 {
     /* Pack b[9] into 49 bits */
-    static const int b_lengths[9] = {7, 5, 5, 9, 7, 5, 4, 4, 3};
+    static const int b_lengths[9] = { 7, 5, 5, 9, 7, 5, 4, 4, 3 };
     uint8_t bits49[49];
-    encode_49bit(bits49,b);
+    encode_49bit(bits49, b);
 
     /* Extract 12-bit values for FEC encoding */
     /* C0 = bits49[0-11], C1 = bits49[12-23], C2 = bits49[24-34], C3 = bits49[35-48] */
@@ -328,7 +332,7 @@ bool opendmr_encode(opendmr_encoder_t *enc,
         return false;
 
     /* Encode PCM to voice parameters */
-    int b[9] = {0};
+    int b[9] = { 0 };
     enc->enc->encode_dmr_params(pcm, b);
 
     /* Encode voice parameters to 72-bit frame */
@@ -349,8 +353,7 @@ const char *opendmr_version(void)
 }
 
 void opendmr_convert_frame(uint8_t bytes[OPENDMR_AMBE_FRAME_BYTES],
-                           uint8_t bits[OPENDMR_AMBE_FRAME_BITS],
-                           bool to_bits)
+                           uint8_t bits[OPENDMR_AMBE_FRAME_BITS], bool to_bits)
 {
     if (to_bits) {
         /* bytes -> bits */

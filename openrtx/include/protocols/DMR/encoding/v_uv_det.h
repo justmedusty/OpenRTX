@@ -19,7 +19,6 @@
  * 02110-1301, USA.
  */
 
-
 #ifndef _V_UV_DET
 #define _V_UV_DET
 

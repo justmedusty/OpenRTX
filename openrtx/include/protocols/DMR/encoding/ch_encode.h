@@ -19,14 +19,11 @@
  * 02110-1301, USA.
  */
 
-
 #ifndef _CH_ENCODE
 #define _CH_ENCODE
 
-#define EN_BIT_STREAM_LEN  (3 + 3*12 + 6 + 2*11 + 3)
-
+#define EN_BIT_STREAM_LEN (3 + 3 * 12 + 6 + 2 * 11 + 3)
 
 void encode_frame_vector(IMBE_PARAM *imbe_param, Word16 *frame_vector);
-
 
 #endif
