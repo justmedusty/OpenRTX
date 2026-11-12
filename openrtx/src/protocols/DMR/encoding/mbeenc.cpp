@@ -98,11 +98,10 @@ static const unsigned int DMR_B_TABLE[] = { 25U, 29U, 33U, 37U, 41U, 45U,
                                             2U,  6U,  10U, 14U, 18U, 22U,
                                             26U, 30U, 34U, 38U, 42U };
 
-
-    static const unsigned int DMR_C_TABLE[] = {
-        46U, 50U, 54U, 58U, 62U, 66U, 70U, 3U,  7U,  11U, 15U, 19U, 23U,
-        27U, 31U, 35U, 39U, 43U, 47U, 51U, 55U, 59U, 63U, 67U, 71U
-    };
+static const unsigned int DMR_C_TABLE[] = { 46U, 50U, 54U, 58U, 62U, 66U, 70U,
+                                            3U,  7U,  11U, 15U, 19U, 23U, 27U,
+                                            31U, 35U, 39U, 43U, 47U, 51U, 55U,
+                                            59U, 63U, 67U, 71U };
 
 /* PRNG table for B-block scrambling */
 static const unsigned int PRNG_TABLE[] = {
